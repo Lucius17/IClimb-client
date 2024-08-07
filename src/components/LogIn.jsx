@@ -6,7 +6,6 @@ function LogIn() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Dodaj logikę logowania
     console.log('Logowanie:', { email, password });
   };
 

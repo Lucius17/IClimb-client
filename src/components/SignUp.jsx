@@ -11,7 +11,6 @@ function SignUp() {
       alert("Passwords do not match");
       return;
     }
-    // Dodaj logikę rejestracji
     console.log('Rejestracja:', { email, password });
   };
 
