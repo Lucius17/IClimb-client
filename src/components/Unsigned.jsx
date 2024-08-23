@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-function Unsigned({ onSignIn, onSignUp }) {
+function Unsigned() {
   return (
     <div className="container text-center">
       <h1>IClimb</h1>
@@ -9,20 +10,8 @@ function Unsigned({ onSignIn, onSignUp }) {
       <br />
       <br />
       <br />
-      <button 
-        className="btn btn-primary mb-3 w-100" 
-        onClick={onSignIn}
-        type="button"
-      >
-        Sign In
-      </button>
-      <button 
-        className="btn btn-secondary w-100" 
-        onClick={onSignUp}
-        type="button"
-      >
-        Sign Up
-      </button>
+      <Link to="/login" className="btn btn-primary mb-3 w-100">Sign In</Link>
+      <Link to="/signup" className="btn btn-secondary w-100">Sign Up</Link>
     </div>
   );
 }

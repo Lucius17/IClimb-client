@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 
-function LogIn() {
+function LogIn({ onSignIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    // Logika logowania
     console.log('Logowanie:', { email, password });
+    onSignIn();  // Aktualizuje stan zalogowania
   };
 
   return (
