@@ -12,6 +12,8 @@ function Unsigned() {
       <br />
       <Link to="/login" className="btn btn-primary mb-3 w-100">Sign In</Link>
       <Link to="/signup" className="btn btn-secondary w-100">Sign Up</Link>
+      <Link to="/superadmin" className="btn btn-secondary w-100">AdminPanel</Link>
+      
     </div>
   );
 }

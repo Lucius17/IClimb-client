@@ -8,6 +8,8 @@ import './App.css';
 import MapView from './components/MapView';
 import Menu from './components/Menu';
 import Profile from './components/Profile';
+import AdminPanel from './components/AdminPanel';
+import SuperAdminPanel from './components/SuperAdminPanel';
 
 
 
@@ -38,6 +40,14 @@ function App() {
           <Route
             path="/gym"
             element={isAuthenticated ? <Navigate to="/" /> : <MapView />}
+          />
+          <Route
+            path="/admin/:centerId/*"
+            element={isAuthenticated ? <Navigate to="/" /> : <AdminPanel />}
+          />
+          <Route
+            path="/superadmin"
+            element={isAuthenticated ? <Navigate to="/" /> : <SuperAdminPanel />}
           />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
