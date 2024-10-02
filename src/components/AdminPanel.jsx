@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useParams } from 'react-router-dom';
 
 function Dashboard() {
   return <h2>Dashboard</h2>;
@@ -14,24 +14,26 @@ function Walls() {
 }
 
 function AdminPanel() {
+  const { centerId } = useParams(); // Pobieramy centerId z parametrów ścieżki
+
   return (
     <div className="d-flex" style={{ height: '100vh' }}>
       {/* Sidebar */}
       <div className="bg-dark text-white p-3" style={{ width: '250px' }}>
-        <h2 className="text-center mb-4">Climb</h2>
+        <h2 className="text-center mb-4">Climb Center: {centerId}</h2> {/* Wyświetlamy centerId */}
         <ul className="nav flex-column">
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to="/admin/dashboard">
+            <Link className="nav-link text-white" to={`/admin/${centerId}/dashboard`}>
               Dashboard
             </Link>
           </li>
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to="/admin/users">
+            <Link className="nav-link text-white" to={`/admin/${centerId}/users`}>
               Users
             </Link>
           </li>
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to="/admin/walls">
+            <Link className="nav-link text-white" to={`/admin/${centerId}/walls`}>
               Walls
             </Link>
           </li>

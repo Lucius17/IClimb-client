@@ -22,63 +22,20 @@ function App() {
 
   return (
     <Router>
-      <div className="container text-center">
+      <div className="container">
         <Routes>
           <Route path="/" element={<Unsigned />} />
-          <Route
-            path="/login"
-            element={isAuthenticated ? <Navigate to="/" /> : <LogIn onSignIn={handleSignIn} />}
-          />
-          <Route
-            path="/signup"
-            element={isAuthenticated ? <Navigate to="/" /> : <SignUp />}
-          />
-          <Route
-            path="/profile"
-            element={isAuthenticated ? <Navigate to="/" /> : <Profile />}
-          />
-          <Route
-            path="/gym"
-            element={isAuthenticated ? <Navigate to="/" /> : <MapView />}
-          />
-          <Route
-            path="/admin/:centerId/*"
-            element={isAuthenticated ? <Navigate to="/" /> : <AdminPanel />}
-          />
-          <Route
-            path="/superadmin"
-            element={isAuthenticated ? <Navigate to="/" /> : <SuperAdminPanel />}
-          />
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LogIn onSignIn={handleSignIn} />} />
+          <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <SignUp />} />
+          <Route path="/map" element={<MapView />} />
+          <Route path="/admin/*" element={<AdminPanel />} />
+          <Route path="/superadmin" element={<SuperAdminPanel />} />
+          <Route path="/admin/:centerId/*" element={<AdminPanel />} />
           <Route path="*" element={<Navigate to="/" />} />
+
         </Routes>
       </div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      
-    <Menu/>
     </Router>
-    // tymaczasowe
-
   );
 }
 

@@ -35,7 +35,7 @@ function SuperAdminPanel() {
           <li key={center.id} className="list-group-item d-flex justify-content-between align-items-center">
             <span>{center.name}</span>
             <div>
-              <Link to={`/admin/${center.id}`} className="btn btn-primary mr-2">
+              <Link to={`/admin/${center.id}/dashboard`} className="btn btn-primary mr-2">
                 Zarządzaj
               </Link>
               <button className="btn btn-danger" onClick={() => handleDeleteCenter(center.id)}>
