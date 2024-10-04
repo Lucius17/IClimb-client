@@ -10,6 +10,7 @@ import Menu from './components/Menu';
 import Profile from './components/Profile';
 import AdminPanel from './components/AdminPanel';
 import SuperAdminPanel from './components/SuperAdminPanel';
+import News from './components/News';
 
 
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LogIn onSignIn={handleSignIn} />} />
           <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <SignUp />} />
           <Route path="/map" element={<MapView />} />
+          <Route path="/news" element={<News />} />
           <Route path="/admin/*" element={<AdminPanel />} />
           <Route path="/superadmin" element={<SuperAdminPanel />} />
           <Route path="/admin/:centerId/*" element={<AdminPanel />} />
