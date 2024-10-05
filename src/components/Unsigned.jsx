@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Menu from './Menu';
 
 function Unsigned() {
   return (
@@ -15,6 +16,8 @@ function Unsigned() {
       <Link to="/superadmin" className="btn btn-secondary w-100">AdminPanel</Link>
       <Link to="/news" className="btn btn-secondary w-100">News</Link>
       
+
+      <Menu />
     </div>
   );
 }

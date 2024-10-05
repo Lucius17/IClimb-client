@@ -28,8 +28,9 @@ function App() {
           <Route path="/" element={<Unsigned />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LogIn onSignIn={handleSignIn} />} />
           <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <SignUp />} />
-          <Route path="/map" element={<MapView />} />
+          <Route path="/gym" element={<MapView />} />
           <Route path="/news" element={<News />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/admin/*" element={<AdminPanel />} />
           <Route path="/superadmin" element={<SuperAdminPanel />} />
           <Route path="/admin/:centerId/*" element={<AdminPanel />} />
