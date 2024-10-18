@@ -11,6 +11,7 @@ import Profile from './components/Profile';
 import AdminPanel from './components/AdminPanel';
 import SuperAdminPanel from './components/SuperAdminPanel';
 import News from './components/News';
+import GymList from "./components/GymList.jsx";
 
 
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Unsigned />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LogIn onSignIn={handleSignIn} />} />
           <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <SignUp />} />
+          <Route path="/gymlist" element={<GymList />} />
           <Route path="/gym" element={<MapView />} />
           <Route path="/news" element={<News />} />
           <Route path="/profile" element={<Profile />} />
