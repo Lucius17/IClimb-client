@@ -4,15 +4,30 @@ function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');  // Pole Imię
+  const [nickname, setNickname] = useState('');  // Opcjonalny nick
+  const [gender, setGender] = useState('');  // Płeć
+  const [canBelay, setCanBelay] = useState('');  // Asekuracja
+  const [errors, setErrors] = useState({}); // Stan na błędy walidacji
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+    const validationErrors = {};
+
+    // Sprawdzenie, czy pola są poprawnie wypełnione
+    if (!email) validationErrors.email = 'Email jest wymagany';
+    if (!name) validationErrors.name = 'Imię jest wymagane';
+    if (!gender) validationErrors.gender = 'Wybór płci jest wymagany';
+    if (!canBelay) validationErrors.canBelay = 'Wybór asekuracji jest wymagany';
+    if (password !== confirmPassword) validationErrors.password = 'Hasła muszą być takie same';
+
+    setErrors(validationErrors);
+
+    // Jeżeli są błędy walidacji, nie wysyłamy formularza
+    if (Object.keys(validationErrors).length > 0) return;
+
     // Logika rejestracji
-    console.log('Rejestracja:', { email, password });
+    console.log('Rejestracja:', { email, password, name, nickname, gender, canBelay });
   };
 
   return (
@@ -29,7 +44,64 @@ function SignUp() {
             onChange={(e) => setEmail(e.target.value)}
             required 
           />
+          {errors.email && <div className="text-danger">{errors.email}</div>}
         </div>
+
+        <div className="form-group mt-3">
+          <label htmlFor="name">Imię</label>
+          <input 
+            type="text" 
+            className="form-control" 
+            id="name" 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required 
+          />
+          {errors.name && <div className="text-danger">{errors.name}</div>}
+        </div>
+
+        <div className="form-group mt-3">
+          <label htmlFor="nickname">Opcjonalny Nick</label>
+          <input 
+            type="text" 
+            className="form-control" 
+            id="nickname" 
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group mt-3">
+          <label>Płeć</label>
+          <select 
+            className="form-control" 
+            value={gender} 
+            onChange={(e) => setGender(e.target.value)} 
+            required
+          >
+            <option value="">Wybierz płeć</option>
+            <option value="male">Mężczyzna</option>
+            <option value="female">Kobieta</option>
+            <option value="other">Inne</option>
+          </select>
+          {errors.gender && <div className="text-danger">{errors.gender}</div>}
+        </div>
+
+        <div className="form-group mt-3">
+          <label>Czy umiesz asekurować?</label>
+          <select 
+            className="form-control" 
+            value={canBelay} 
+            onChange={(e) => setCanBelay(e.target.value)} 
+            required
+          >
+            <option value="">Wybierz</option>
+            <option value="yes">Tak</option>
+            <option value="no">Nie</option>
+          </select>
+          {errors.canBelay && <div className="text-danger">{errors.canBelay}</div>}
+        </div>
+
         <div className="form-group mt-3">
           <label htmlFor="password">Password</label>
           <input 
@@ -41,6 +113,7 @@ function SignUp() {
             required 
           />
         </div>
+
         <div className="form-group mt-3">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input 
@@ -51,7 +124,9 @@ function SignUp() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required 
           />
+          {errors.password && <div className="text-danger">{errors.password}</div>}
         </div>
+
         <button type="submit" className="btn btn-primary mt-3 w-100">Sign Up</button>
       </form>
     </div>
