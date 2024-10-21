@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function LogIn({ onSignIn }) {
   const [email, setEmail] = useState('');
@@ -39,6 +40,9 @@ function LogIn({ onSignIn }) {
         </div>
         <button type="submit" className="btn btn-primary mt-3 w-100">Log In</button>
       </form>
+      <div className="mt-3">
+        <Link to="/forgot-password">Zapomniałem hasła</Link>
+      </div>
     </div>
   );
 }

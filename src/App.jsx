@@ -12,6 +12,7 @@ import AdminPanel from './components/AdminPanel';
 import SuperAdminPanel from './components/SuperAdminPanel';
 import News from './components/News';
 import GymList from "./components/GymList.jsx";
+import ForgotPassword from './components/ForgotPassword.jsx';
 
 
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/admin/*" element={<AdminPanel />} />
           <Route path="/superadmin" element={<SuperAdminPanel />} />
           <Route path="/admin/:centerId/*" element={<AdminPanel />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="*" element={<Navigate to="/" />} />
 
         </Routes>
