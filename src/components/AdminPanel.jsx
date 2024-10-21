@@ -3,6 +3,8 @@ import { Link, Route, Routes, useParams } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Upewnij się, że Bootstrap jest załadowany
+import ReactQuill from 'react-quill'; // Import Quill
+import 'react-quill/dist/quill.snow.css'; // Import style dla Quill
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -177,10 +179,9 @@ function News() {
                 </div>
                 <div className="form-group">
                   <label>Full Content</label>
-                  <textarea
-                    className="form-control"
+                  <ReactQuill
                     value={newNews.fullContent}
-                    onChange={(e) => setNewNews({ ...newNews, fullContent: e.target.value })}
+                    onChange={(content) => setNewNews({ ...newNews, fullContent: content })}
                   />
                 </div>
               </div>
@@ -199,6 +200,7 @@ function News() {
     </div>
   );
 }
+
 
 // Komponent Users
 function Users() {
