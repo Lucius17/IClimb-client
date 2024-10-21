@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Menu from './Menu.jsx';
 import { Modal, Button } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import ReactQuill from 'react-quill'; // Użyj ReactQuill zamiast Quill
+import 'react-quill/dist/quill.snow.css'; // Import CSS Quill
+import Menu from './Menu.jsx';
 
 function News() {
   const [showModal, setShowModal] = useState(false);
@@ -13,19 +13,19 @@ function News() {
       title: 'New Gym Opening in Warsaw!',
       description: 'A brand new gym has opened in Warsaw with state-of-the-art equipment.',
       imageUrl: 'https://via.placeholder.com/100',
-      fullContent: 'Full details about the new gym opening in Warsaw...',
+      fullContent: '<p>Full details about the new gym opening in Warsaw...</p>',
     },
     {
       title: 'Climbing Event This Weekend',
       description: 'Join us for a fun climbing event happening this weekend!',
       imageUrl: 'https://via.placeholder.com/100',
-      fullContent: 'Full details about the climbing event happening this weekend...',
+      fullContent: '<p>Full details about the climbing event happening this weekend...</p>',
     },
     {
       title: 'Fitness Classes Starting Soon',
       description: 'Our new fitness classes are starting next week. Sign up today!',
       imageUrl: 'https://via.placeholder.com/100',
-      fullContent: 'Full details about the upcoming fitness classes...',
+      fullContent: '<p>Full details about the upcoming fitness classes...</p>',
     },
   ];
 
@@ -69,15 +69,16 @@ function News() {
       {/* Modal to show full news */}
       {selectedNews && (
         <Modal show={showModal} onHide={handleCloseModal} centered>
-          <Modal.Header>
-            {/* Icona powrotu */}
-            <Button variant="link" onClick={handleCloseModal} style={{ padding: 0 }}>
-              <FontAwesomeIcon icon={faArrowLeft} size="lg" />
-            </Button>
-            <Modal.Title className="ms-3">{selectedNews.title}</Modal.Title>
+          <Modal.Header closeButton>
+            <Modal.Title>{selectedNews.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>{selectedNews.fullContent}</p>
+            {/* Użyj ReactQuill do wyświetlania treści */}
+            <ReactQuill
+              value={selectedNews.fullContent}
+              readOnly
+              theme="bubble" // Możesz zmienić temat na 'bubble' lub 'snow'
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
