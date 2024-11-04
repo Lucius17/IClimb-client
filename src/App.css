@@ -5,6 +5,11 @@
   text-align: center;
 }
 
+.dark-mode {
+  --background-color: #121212;
+  --primary-text-color: #f1f1f1;
+  --secondary-text-color: #e0e0e0;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -39,4 +44,41 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.theme-switch {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 0.9rem;
+  color: #cd2a2a;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.theme-switch:hover {
+  color: #cd2a2a;
+}
+
+.dark-mode .theme-switch:hover {
+  color: #cd2a2a;
+}
+.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1;
+}
+
+.dark-mode .container {
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+}
+
+.table-dark {
+  background-color: #343a40;
+  color: #f8f9fa;
+}
+
+.table-dark th,
+.table-dark td {
+  border-color: #454d55;
 }
