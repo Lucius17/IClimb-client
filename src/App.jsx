@@ -13,6 +13,7 @@ import News from './components/News';
 import GymList from "./components/GymList.jsx";
 import ForgotPassword from './components/ForgotPassword.jsx';
 import GymOverview from "./components/GymOverview";
+import GymDetail   from "./components/GymDetail.jsx";
 import { ThemeProvider } from './ThemeContext';
 
 
@@ -27,6 +28,11 @@ function App() {
     setIsAuthenticated(true);
   };
 
+  const [routes, setRoutes] = useState([
+    { id: 1, x: 50, y: 100, color: '#ff0000', difficulty: '6a', date: '2024-01-01', author: 'Staszek' },
+    { id: 2, x: 120, y: 150, color: '#00ff00', difficulty: '6b', date: '2024-02-01', author: 'Mama' },
+  ]);
+  const svgData = '<svg><!-- SVG content here --></svg>';
   return (
       <ThemeProvider>
           <Router>
@@ -41,6 +47,7 @@ function App() {
                 <Route path="/map" element={<MapView/>}/>
                 <Route path="/gymlist" element={<GymList/>}/>
                 <Route path="/gym" element={<GymOverview/>}/>
+                <Route path="/gym/:id" element={<GymDetail svgData={svgData} routes={routes} setRoutes={setRoutes} />} />
                 <Route path="/news" element={<News/>}/>
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/admin/*" element={<AdminPanel/>}/>
