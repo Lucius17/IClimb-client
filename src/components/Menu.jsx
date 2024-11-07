@@ -7,7 +7,7 @@ import { faHouse,faDumbbell,faUser } from '@fortawesome/free-solid-svg-icons'
 export default function Menu() {
   return (
     
-    <div className="fixed-bottom bg-light">
+    <div className="fixed-bottom">
     
       <div className="d-flex justify-content-around">
         <Link to="/" className="btn btn-primary w-100 text-center"><FontAwesomeIcon icon={faHouse} /></Link>

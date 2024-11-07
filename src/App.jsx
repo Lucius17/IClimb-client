@@ -23,6 +23,8 @@ function App() {
 
   const toggleDarkMode = () => {
     setIsDarkMode((prevMode) => !prevMode);
+    document.body.style.setProperty('--background-color', isDarkMode ? 'white' : '#1e1d1d');
+    document.body.style.setProperty('--text-color', isDarkMode ? 'black' : '#f1f1f1');
   };
   const handleSignIn = () => {
     setIsAuthenticated(true);
@@ -35,30 +37,30 @@ function App() {
   const svgData = '<svg><!-- SVG content here --></svg>';
   return (
       <ThemeProvider>
-          <Router>
-            <div className={`container ${isDarkMode ? 'dark-mode' : ''}`}>
-              <span className="theme-switch" onClick={toggleDarkMode}>
-            Switch Theme
-          </span>
-              <Routes>
-                <Route path="/" element={<Unsigned/>}/>
-                <Route path="/login" element={isAuthenticated ? <Navigate to="/"/> : <LogIn onSignIn={handleSignIn}/>}/>
-                <Route path="/signup" element={isAuthenticated ? <Navigate to="/"/> : <SignUp/>}/>
-                <Route path="/map" element={<MapView/>}/>
-                <Route path="/gymlist" element={<GymList/>}/>
-                <Route path="/gym" element={<GymOverview/>}/>
-                <Route path="/gym/:id" element={<GymDetail svgData={svgData} routes={routes} setRoutes={setRoutes} />} />
-                <Route path="/news" element={<News/>}/>
-                <Route path="/profile" element={<Profile/>}/>
-                <Route path="/admin/*" element={<AdminPanel/>}/>
-                <Route path="/superadmin" element={<SuperAdminPanel/>}/>
-                <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
-                <Route path="/forgot-password" element={<ForgotPassword/>}/>
-                <Route path="*" element={<Navigate to="/"/>}/>
+        <Router>
+          <div className="container">
+        <span className="theme-switch" onClick={toggleDarkMode}>
+          {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        </span>
+            <Routes>
+              <Route path="/" element={<Unsigned/>}/>
+              <Route path="/login" element={isAuthenticated ? <Navigate to="/"/> : <LogIn onSignIn={handleSignIn}/>}/>
+              <Route path="/signup" element={isAuthenticated ? <Navigate to="/"/> : <SignUp/>}/>
+              <Route path="/map" element={<MapView/>}/>
+              <Route path="/gymlist" element={<GymList/>}/>
+              <Route path="/gym" element={<GymOverview/>}/>
+              <Route path="/gym/:id" element={<GymDetail svgData={svgData} routes={routes} setRoutes={setRoutes}/>}/>
+              <Route path="/news" element={<News/>}/>
+              <Route path="/profile" element={<Profile/>}/>
+              <Route path="/admin/*" element={<AdminPanel/>}/>
+              <Route path="/superadmin" element={<SuperAdminPanel/>}/>
+              <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
+              <Route path="/forgot-password" element={<ForgotPassword/>}/>
+              <Route path="*" element={<Navigate to="/"/>}/>
 
-              </Routes>
-            </div>
-          </Router>
+            </Routes>
+          </div>
+        </Router>
       </ThemeProvider>
   );
 }

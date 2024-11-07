@@ -29,14 +29,16 @@ function GymDetail({ svgData, routes, setRoutes }) {
     return (
         <div className="gym-detail-container">
             <h2>{center.name}</h2>
-
+            <p>
+                <img src={center.imageUrl} alt="Center Logo" style={{width: '100px'}}/>
+            </p>
             <button className="btn btn-primary mb-1" onClick={() => setIsEditMode(!isEditMode)}>
                 {isEditMode ? 'Switch to View Mode' : 'Switch to Edit Mode'}
             </button>
             {isEditMode ? (
-                <GymRouteEditor svgData={svgData} routes={routes} onSaveRoutes={setRoutes} />
+                <GymRouteEditor svgData={svgData} routes={routes} onSaveRoutes={setRoutes}/>
             ) : (
-                <GymRouteViewer svgData={svgData} routes={routes} />
+                <GymRouteViewer svgData={svgData} routes={routes}/>
             )}
             <Menu/>
         </div>
