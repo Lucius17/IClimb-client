@@ -5,6 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import 'bootstrap/dist/css/bootstrap.min.css'; // Upewnij się, że Bootstrap jest załadowany
 import ReactQuill from 'react-quill'; // Import Quill
 import 'react-quill/dist/quill.snow.css'; // Import style dla Quill
+import { Modal, Button } from 'react-bootstrap';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -201,6 +202,27 @@ function News() {
   );
 }
 
+function Info() {
+  const [address, setAddress] = useState('');
+  const [hours, setHours] = useState('');
+
+  return (
+    <div>
+      <h2>Info</h2>
+      <div className="form-group">
+        <label>Address</label>
+        <input type="text" className="form-control" value={address} onChange={(e) => setAddress(e.target.value)} />
+      </div>
+      <div className="form-group">
+        <label>Opening Hours</label>
+        <input type="text" className="form-control" value={hours} onChange={(e) => setHours(e.target.value)} />
+      </div>
+      <button className="btn btn-primary mt-3" onClick={() => alert(`Address: ${address}, Hours: ${hours}`)}>
+        Save
+      </button>
+    </div>
+  );
+}
 
 // Komponent Users
 function Users() {
@@ -208,30 +230,41 @@ function Users() {
     { id: 1, name: 'John Doe', email: 'john@example.com', gender: 'Male', skills: 'Yes', nickname: 'johnny' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', gender: 'Female', skills: 'No', nickname: 'jane' },
   ]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  const [newUser, setNewUser] = useState({ id: '', name: '', email: '', gender: '', skills: '', nickname: '' });
-  const [showModal, setShowModal] = useState(false);
-
-  const handleEdit = (id) => {
-    alert(`Edit user with id ${id}`);
+  const handleEdit = (user) => {
+    setCurrentUser(user);
+    setShowEditModal(true);
   };
 
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+  const handleDelete = (userId) => {
+    setUsers(users.filter(user => user.id !== userId));
   };
 
-  const handleAddUser = () => {
-    setUsers([...users, { ...newUser, id: users.length + 1 }]);
-    setNewUser({ id: '', name: '', email: '', gender: '', skills: '', nickname: '' });
-    setShowModal(false);
+  const handleSave = () => {
+    setUsers(users.map(user => user.id === currentUser.id ? currentUser : user));
+    setShowEditModal(false);
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentUser({ ...currentUser, [name]: value });
+  };
+
+  const filteredUsers = users.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div>
       <h2>Users</h2>
-      <button className="btn btn-primary mb-3" onClick={() => setShowModal(true)}>
-        Add User
-      </button>
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder="Search users..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       <table className="table">
         <thead>
           <tr>
@@ -239,13 +272,13 @@ function Users() {
             <th>Name</th>
             <th>Email</th>
             <th>Gender</th>
-            <th>Skills (Belay)</th>
+            <th>Skills</th>
             <th>Nickname</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.name}</td>
@@ -254,79 +287,91 @@ function Users() {
               <td>{user.skills}</td>
               <td>{user.nickname}</td>
               <td>
-                <button className="btn btn-warning mr-2" onClick={() => handleEdit(user.id)}>
-                  Edit
-                </button>
-                <button className="btn btn-danger" onClick={() => handleDelete(user.id)}>
-                  Delete
-                </button>
+                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(user)}>Edit</button>
+                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(user.id)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Modal for adding new user */}
-      {showModal && (
-        <div className="modal show" style={{ display: 'block' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add User</h5>
-                <button type="button" className="close" onClick={() => setShowModal(false)}>
-                  <span>&times;</span>
-                </button>
+      {/* Modal for Editing User */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {currentUser && (
+            <>
+              <div className="form-group mb-3">
+                <label>ID</label>
+                <input type="text" className="form-control" value={currentUser.id} disabled />
               </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>ID</label>
-                  <input type="number" className="form-control" value={newUser.id} onChange={(e) => setNewUser({ ...newUser, id: e.target.value })} />
-                </div>
-                <div className="form-group">
-                  <label>Name</label>
-                  <input type="text" className="form-control" value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} />
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input type="email" className="form-control" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
-                </div>
-                <div className="form-group">
-                  <label>Gender</label>
-                  <select className="form-control" value={newUser.gender} onChange={(e) => setNewUser({ ...newUser, gender: e.target.value })}>
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Skills (Belay)</label>
-                  <select className="form-control" value={newUser.skills} onChange={(e) => setNewUser({ ...newUser, skills: e.target.value })}>
-                    <option value="">Select</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Nickname</label>
-                  <input type="text" className="form-control" value={newUser.nickname} onChange={(e) => setNewUser({ ...newUser, nickname: e.target.value })} />
-                </div>
+              <div className="form-group mb-3">
+                <label>Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="name"
+                  value={currentUser.name}
+                  onChange={handleChange}
+                />
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary" onClick={handleAddUser}>
-                  Add User
-                </button>
+              <div className="form-group mb-3">
+                <label>Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email"
+                  value={currentUser.email}
+                  onChange={handleChange}
+                />
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+              <div className="form-group mb-3">
+                <label>Gender</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="gender"
+                  value={currentUser.gender}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Skills</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="skills"
+                  value={currentUser.skills}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Nickname</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nickname"
+                  value={currentUser.nickname}
+                  onChange={handleChange}
+                />
+              </div>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSave}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
-
 // Komponent Walls
 function Walls() {
   const walls = [
@@ -382,45 +427,33 @@ function AdminPanel() {
 
   return (
     <div className="d-flex" style={{ height: '100vh' }}>
-      {/* Sidebar */}
       <div className="bg-dark text-white p-3" style={{ width: '250px' }}>
         <h2 className="text-center mb-4">Climb Center: {centerId}</h2>
         <ul className="nav flex-column">
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to={`/admin/${centerId}/dashboard`}>
-              Dashboard
-            </Link>
+            <Link className="nav-link text-white" to={`/admin/${centerId}/dashboard`}>Dashboard</Link>
           </li>
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to={`/admin/${centerId}/users`}>
-              Users
-            </Link>
+            <Link className="nav-link text-white" to={`/admin/${centerId}/users`}>Users</Link>
           </li>
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to={`/admin/${centerId}/walls`}>
-              Walls
-            </Link>
+            <Link className="nav-link text-white" to={`/admin/${centerId}/walls`}>Walls</Link>
           </li>
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to={`/admin/${centerId}/news`}>
-              News
-            </Link>
+            <Link className="nav-link text-white" to={`/admin/${centerId}/news`}>News</Link>
+          </li>
+          <li className="nav-item mb-2">
+            <Link className="nav-link text-white" to={`/admin/${centerId}/info`}>Info</Link>
           </li>
         </ul>
-        <div className="mt-auto">
-          <button className="btn btn-danger w-100" onClick={() => alert('Wylogowano!')}>
-            Log Out
-          </button>
-        </div>
       </div>
-
-      {/* Main Content */}
-      <div className="flex-grow-1 p-4">
+      <div className="flex-grow-1 p-3">
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<Users />} />
           <Route path="walls" element={<Walls />} />
           <Route path="news" element={<News />} />
+          <Route path="info" element={<Info />} />
         </Routes>
       </div>
     </div>
