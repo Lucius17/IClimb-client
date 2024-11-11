@@ -15,6 +15,7 @@ import ForgotPassword from './components/ForgotPassword.jsx';
 import GymOverview from "./components/GymOverview";
 import GymDetail   from "./components/GymDetail.jsx";
 import { ThemeProvider } from './ThemeContext';
+import ClimbingWall from './components/ClimbingWall.jsx';
 
 
 function App() {
@@ -36,12 +37,8 @@ function App() {
   ]);
   const svgData = '<svg><!-- SVG content here --></svg>';
   return (
-      <ThemeProvider>
         <Router>
           <div className="container">
-        <span className="theme-switch" onClick={toggleDarkMode}>
-          {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        </span>
             <Routes>
               <Route path="/" element={<Unsigned/>}/>
               <Route path="/login" element={isAuthenticated ? <Navigate to="/"/> : <LogIn onSignIn={handleSignIn}/>}/>
@@ -52,6 +49,7 @@ function App() {
               <Route path="/gym/:id" element={<GymDetail svgData={svgData} routes={routes} setRoutes={setRoutes}/>}/>
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
+              <Route path="/test" element={<ClimbingWall/>}/>
               <Route path="/admin/*" element={<AdminPanel/>}/>
               <Route path="/superadmin" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
@@ -61,7 +59,6 @@ function App() {
             </Routes>
           </div>
         </Router>
-      </ThemeProvider>
   );
 }
 

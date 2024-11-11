@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Menu from './Menu';
 
 function Unsigned() {
+
+  
   return (
     <div className="container text-center">
       <h1>IClimb</h1>
@@ -15,6 +17,7 @@ function Unsigned() {
       <Link to="/signup" className="btn btn-secondary w-100">Sign Up</Link>
       <Link to="/superadmin" className="btn btn-secondary w-100">AdminPanel</Link>
       <Link to="/news" className="btn btn-secondary w-100">News</Link>
+      <Link to="/test" className="btn btn-secondary w-100">ścianka</Link>
       
 
       <Menu />
