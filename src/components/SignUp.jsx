@@ -48,14 +48,13 @@ function SignUp() {
         </div>
 
         <div className="form-group mt-3">
-          <label htmlFor="name">Imię</label>
+          <label htmlFor="name">Imię i Nazwisko (opcjonalne)</label>
           <input 
             type="text" 
             className="form-control" 
             id="name" 
             value={name}
             onChange={(e) => setName(e.target.value)}
-            required 
           />
           {errors.name && <div className="text-danger">{errors.name}</div>}
         </div>
