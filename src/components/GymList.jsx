@@ -7,7 +7,6 @@ import { useTheme } from '../ThemeContext';
 function GymList() {
     const [centers, setCenters] = useState([]);
     const navigate = useNavigate();
-    const { isDarkMode } = useTheme();
 
     useEffect(() => {
 
@@ -24,7 +23,7 @@ function GymList() {
 
     return (
         <div className="container my-4">
-            <table className={`table table-striped ${isDarkMode ? 'table-dark' : ''}`}>
+            <table className={`table table-striped`}>
                 <thead>
                 <tr>
                     <th></th>
