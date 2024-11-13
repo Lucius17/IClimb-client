@@ -1,15 +1,29 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '/src/api.js'
 
 function LogIn({ onSignIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Logika logowania
-    console.log('Logowanie:', { email, password });
-    onSignIn();  // Aktualizuje stan zalogowania
+    try {
+      const response = await api.post('/auth/login', {
+        email,
+        password,
+      });
+
+      if (response.data.success) {
+        onSignIn();
+      } else {
+        setError(response.data.message || 'Login failed');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred during login');
+    }
   };
 
   return (
