@@ -15,8 +15,10 @@ function LogIn({ onSignIn }) {
         password,
       });
 
-      if (response.data.success) {
-        onSignIn();
+      if (response.data.success === 200) {
+        const {token, message} = response.data;
+        onSignIn(token);
+        console.log(message);
       } else {
         setError(response.data.message || 'Login failed');
       }
