@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '/src/api.js';
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ function SignUp() {
   const [canBelay, setCanBelay] = useState('');  // Asekuracja
   const [errors, setErrors] = useState({}); // Stan na błędy walidacji
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const validationErrors = {};
 
@@ -27,7 +28,22 @@ function SignUp() {
     if (Object.keys(validationErrors).length > 0) return;
 
     // Logika rejestracji
-    console.log('Rejestracja:', { email, password, name, nickname, gender, canBelay });
+    //console.log('Rejestracja:', { email, password, name, nickname, gender, canBelay });
+    try {
+
+      const response = await api.post('/auth/signup', {
+        email,
+        password,
+        name,
+        nickname,
+        gender,
+        belay: canBelay === 'no'
+      });
+
+      console.log(response.data.message);
+    } catch (error) {
+      console.error('Error during signup:', error.response?.data?.message || error.message);
+    }
   };
 
   return (
@@ -60,7 +76,7 @@ function SignUp() {
         </div>
 
         <div className="form-group mt-3">
-          <label htmlFor="nickname">Opcjonalny Nick</label>
+          <label htmlFor="nickname">Nick</label>
           <input 
             type="text" 
             className="form-control" 
