@@ -13,8 +13,6 @@ import News from './components/News';
 import GymList from "./components/GymList.jsx";
 import ForgotPassword from './components/ForgotPassword.jsx';
 import GymOverview from "./components/GymOverview";
-import GymDetail   from "./components/GymDetail.jsx";
-import { ThemeProvider } from './ThemeContext';
 import ClimbingWall from './components/ClimbingWall.jsx';
 
 
@@ -45,8 +43,7 @@ function App() {
               <Route path="/signup" element={isAuthenticated ? <Navigate to="/"/> : <SignUp/>}/>
               <Route path="/map" element={<MapView/>}/>
               <Route path="/gymlist" element={<GymList/>}/>
-              <Route path="/gym" element={<GymOverview/>}/>
-              <Route path="/gym/:id" element={<GymDetail svgData={svgData} routes={routes} setRoutes={setRoutes}/>}/>
+              <Route path="/gym" element={<MapView/>}/>
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/test" element={<ClimbingWall/>}/>
