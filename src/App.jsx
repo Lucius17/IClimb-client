@@ -48,7 +48,7 @@ function App() {
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/test" element={<ClimbingWall/>}/>
               <Route path="/admin/*" element={<AdminPanel/>}/>
-              <Route path="/superadmin" element={<SuperAdminPanel/>}/>
+              <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
               <Route path="/forgot-password" element={<ForgotPassword/>}/>
               <Route path="*" element={<Navigate to="/"/>}/>
