@@ -9,7 +9,6 @@ function Gyms() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Fetch gyms from backend
   const fetchGyms = async () => {
     try {
       const response = await api.get('/gyms/gym');
@@ -30,7 +29,7 @@ function Gyms() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:3000/api/gyms', { name: newCenterName });
+      const response = await api.post('/gyms/gym', { name: newCenterName });
       setSportsCenters([...sportsCenters, response.data]);
       setNewCenterName('');
       setError('');
@@ -43,7 +42,7 @@ function Gyms() {
 
   const handleDeleteCenter = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/gyms/${id}`);
+      await api.delete(`/gyms/gym/${id}`);
       setSportsCenters(sportsCenters.filter(center => center._id !== id));
       setSuccess('Gym deleted successfully.');
     } catch (err) {
