@@ -1,28 +1,44 @@
 // Users.jsx
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import api from '/src/api.js'
 
 function Users() {
-  const [users, setUsers] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', gender: 'Male', skills: 'Yes', nickname: 'johnny' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', gender: 'Female', skills: 'No', nickname: 'jane' },
-  ]);
+  const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await api.get('/users/users');
+      setUsers(response.data);
+    }catch(err) {
+      console.error('Error fetching users:', err);
+    }
+  }
 
   const handleEdit = (user) => {
     setCurrentUser(user);
     setShowEditModal(true);
   };
 
-  const handleDelete = (userId) => {
-    setUsers(users.filter(user => user.id !== userId));
+  const handleDelete = async (userId) => {
+    try {
+      await api.delete(`/users/users/${userId}`);
+      setUsers(users.filter((user) => user._id !== userId));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
   };
-
-  const handleSave = () => {
-    setUsers(users.map(user => (user.id === currentUser.id ? currentUser : user)));
-    setShowEditModal(false);
+  const handleSave = async () => {
+    try {
+      await api.put(`/users/users/${currentUser._id}`, currentUser);
+      setUsers(users.map(user => (user._id === currentUser._id ? currentUser : user)));
+      setShowEditModal(false);
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
   };
 
   const handleChange = (e) => {
@@ -31,8 +47,14 @@ function Users() {
   };
 
   const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.nickname.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  useEffect(() => {
+    (async () => {
+      await fetchUsers();
+    })();
+  }, []);
 
   return (
     <div>
@@ -46,34 +68,34 @@ function Users() {
       />
       <table className="table">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Gender</th>
-            <th>Skills</th>
-            <th>Nickname</th>
-            <th>Actions</th>
-          </tr>
+        <tr>
+          <th>ID</th>
+          <th>Nickname</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Gender</th>
+          <th>Belay</th>
+          <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
           {filteredUsers.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.gender}</td>
-              <td>{user.skills}</td>
-              <td>{user.nickname}</td>
-              <td>
-                <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(user)}>
-                  Edit
-                </button>
-                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(user.id)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
+              <tr key={user._id}>
+                <td>{user._id.slice(-4)}</td>
+                <td>{user.nickname}</td>
+                <td>{user.name || '-'}</td>
+                <td>{user.email}</td>
+                <td>{user.gender || "-"}</td>
+                <td>{user.belay ? 'Yes' : 'No'}</td>
+                <td>
+                  <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(user)}>
+                    Edit
+                  </button>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(user._id)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
           ))}
         </tbody>
       </table>
@@ -88,7 +110,7 @@ function Users() {
             <>
               <div className="form-group mb-3">
                 <label>ID</label>
-                <input type="text" className="form-control" value={currentUser.id} disabled />
+                <input type="text" className="form-control" value={currentUser._id} disabled />
               </div>
               <div className="form-group mb-3">
                 <label>Name</label>
@@ -121,23 +143,23 @@ function Users() {
                 />
               </div>
               <div className="form-group mb-3">
-                <label>Skills</label>
+                <label>Belay</label>
                 <input
-                  type="text"
-                  className="form-control"
-                  name="skills"
-                  value={currentUser.skills}
-                  onChange={handleChange}
-                />
+                    className="form-control"
+                    name="belay"
+                    value={currentUser.belay}
+                    onChange={handleChange}
+                >
+                </input>
               </div>
               <div className="form-group mb-3">
                 <label>Nickname</label>
                 <input
-                  type="text"
-                  className="form-control"
-                  name="nickname"
-                  value={currentUser.nickname}
-                  onChange={handleChange}
+                    type="text"
+                    className="form-control"
+                    name="nickname"
+                    value={currentUser.nickname}
+                    onChange={handleChange}
                 />
               </div>
             </>

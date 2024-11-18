@@ -15,10 +15,12 @@ function LogIn({ onSignIn }) {
         password,
       });
 
-      if (response.data.success === 200) {
+      if (response.data.token) {
         const {token, message} = response.data;
         onSignIn(token);
         console.log(message);
+        window.location.href = '/gym'; //
+
       } else {
         setError(response.data.message || 'Login failed');
       }
