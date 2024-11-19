@@ -19,7 +19,7 @@ function LogIn({ onSignIn }) {
         const {token, message} = response.data;
         onSignIn(token);
         console.log(message);
-        window.location.href = '/gym'; //
+        window.location.href = '/gym';
 
       } else {
         setError(response.data.message || 'Login failed');
