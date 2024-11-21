@@ -15,15 +15,9 @@ function LogIn({ onSignIn }) {
         password,
       });
 
-      if (response.data.token) {
-        const {token, message} = response.data;
-        onSignIn(token);
-        console.log(message);
-        window.location.href = '/gym';
-
-      } else {
-        setError(response.data.message || 'Login failed');
-      }
+      console.log(response.data.message);
+      onSignIn();
+      window.location.href = '/gym';
     } catch (err) {
       console.error('Login error:', err);
       setError('An error occurred during login');

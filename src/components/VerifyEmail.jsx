@@ -10,10 +10,10 @@ function VerifyEmail() {
         const token = searchParams.get('token');
         api()
             .get(`/users/users/verify-email?token=${token}`)
-            .then((response) => {
+            .then(() => {
                 setMessage('Email verified successfully!');
             })
-            .catch((error) => {
+            .catch(() => {
                 setMessage('Verification failed or token expired.');
             });
     }, [searchParams]);
