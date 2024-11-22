@@ -218,8 +218,16 @@ function Info() {
     sunday: { open: '', close: '' },
   });
 
+  const [price, setPrice] = useState('');
+  const [priceWithMultisport, setPriceWithMultisport] = useState('');
+  const [gymMembership, setGymMembership] = useState('');
+
   const handleSave = () => {
-    alert(`Address: ${address}, Coordinates: ${coordinates}, Hours: ${JSON.stringify(hours)}`);
+    alert(
+      `Address: ${address}, Coordinates: ${coordinates}, Hours: ${JSON.stringify(
+        hours
+      )}, Price: ${price}, Price With Multisport: ${priceWithMultisport}, Gym Membership: ${gymMembership}`
+    );
   };
 
   const LocationMarker = () => {
@@ -277,6 +285,36 @@ function Info() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="form-group">
+        <label>Price</label>
+        <input
+          type="number"
+          className="form-control"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Price With Multisport</label>
+        <input
+          type="number"
+          className="form-control"
+          value={priceWithMultisport}
+          onChange={(e) => setPriceWithMultisport(e.target.value)}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Gym Membership Price</label>
+        <input
+          type="number"
+          className="form-control"
+          value={gymMembership}
+          onChange={(e) => setGymMembership(e.target.value)}
+        />
       </div>
 
       <div className="form-group">
