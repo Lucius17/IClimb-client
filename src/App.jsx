@@ -14,6 +14,7 @@ import GymList from "./components/GymList.jsx";
 import ForgotPassword from './components/ForgotPassword.jsx';
 import GymOverview from "./components/GymOverview";
 import ClimbingWall from './components/ClimbingWall.jsx';
+import ClimbingWallEditor from './components/ClimbingWallEditor.jsx';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/test" element={<ClimbingWall/>}/>
+              <Route path="/edytor" element={<ClimbingWallEditor/>}/>
               <Route path="/admin/*" element={<AdminPanel/>}/>
               <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
