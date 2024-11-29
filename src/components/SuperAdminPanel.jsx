@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import api from '/src/api.js';
 import Users from './Users';
+import { Modal, Button } from 'react-bootstrap';
 
 function Gyms() {
   const [sportsCenters, setSportsCenters] = useState([]);
   const [newCenterName, setNewCenterName] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newAdmin, setNewAdmin] = useState({ email: '', password: '' });
 
   const fetchGyms = async () => {
     try {
@@ -18,6 +21,23 @@ function Gyms() {
       setError('Failed to load gyms.');
     }
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewAdmin({ ...newAdmin, [name]: value });
+  };
+
+  const handleAddAdmin = () => {
+    if (NewAdmin.email && NewAdmin.password) {
+      setModerators([
+        ...moderators,
+        { id: Date.now().toString(), ...NewAdmin },
+      ]);
+      setNewAdmin({ email: '', password: '' });
+      setShowAddModal(false);
+    }
+  };
+
 
   useEffect(() => {
     fetchGyms();
@@ -80,6 +100,42 @@ function Gyms() {
           />
           <button className="btn btn-success mt-2" onClick={handleAddCenter}>Dodaj Obiekt</button>
         </div>
+
+        <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Admin</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="form-group mb-3">
+            <label>Email</label>
+            <input
+              type="email"
+              className="form-control"
+              name="email"
+              value={newAdmin.email}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group mb-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control"
+              name="password"
+              value={newAdmin.password}
+              onChange={handleChange}
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAddModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleAddAdmin}>
+            Add Moderator
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </div>
   );
 }

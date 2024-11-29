@@ -16,6 +16,7 @@ import GymOverview from "./components/GymOverview";
 import ClimbingWall from './components/ClimbingWall.jsx';
 import ClimbingWallEditor from './components/ClimbingWallEditor.jsx';
 import Sectors from './components/Sectors.jsx';
+import VerifyEmail from './components/VerifyEmail.jsx';
 
 
 function App() {
@@ -55,6 +56,8 @@ function App() {
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
               <Route path="/forgot-password" element={<ForgotPassword/>}/>
               <Route path="/sectors" element={<Sectors/>}/>
+              <Route path="/verify/:token" element={<VerifyEmail/>}/>
+              
               <Route path="*" element={<Navigate to="/"/>}/>
 
 

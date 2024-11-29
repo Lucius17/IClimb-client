@@ -8,6 +8,7 @@ function Profile() {
   const [avatar, setAvatar] = useState('https://via.placeholder.com/150'); // Użycie URL jako placeholder
   const [gymName, setGymName] = useState('Gym Warszawa');
   const [isEditing, setIsEditing] = useState(false);
+  
 
   const [formData, setFormData] = useState({
     avatar: avatar,
@@ -155,7 +156,15 @@ function Profile() {
           <h3>Twoja aktywność</h3>
           <Line data={activityData} />
         </div>
+
+        <button
+          className="btn btn-danger mt-5"
+        >
+          Log out
+        </button>
       </div>
+
+
       <Menu />
     </>
   );
