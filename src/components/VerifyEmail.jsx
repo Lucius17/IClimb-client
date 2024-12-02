@@ -9,8 +9,9 @@ function VerifyEmail() {
     const [success, setSuccess] = useState(false);
 
     useEffect(() => {
+        console.log("Token received:", token);
         api
-            .get(`/users/users/verify-email?token=${token}`)
+            .get(`/users/verify-email?token=${token}`)
             .then(() => {
                 setMessage('Email verified successfully!');
                 setSuccess(true);
