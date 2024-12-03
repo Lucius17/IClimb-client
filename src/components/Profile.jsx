@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { useNavigate } from 'react-router-dom';
 import Menu from './Menu';
+import api from '/src/api.js'
 
 function Profile() {
   const [avatar, setAvatar] = useState('https://via.placeholder.com/150'); // Użycie URL jako placeholder
@@ -159,6 +160,10 @@ function Profile() {
 
         <button
           className="btn btn-danger mt-5"
+          onClick={() => {
+            api.post('/auth/logout');
+            navigate('/login');
+          }}
         >
           Log out
         </button>
