@@ -50,7 +50,7 @@ const ClimbingWall = () => {
     <>
       <TransformWrapper
         initialScale={1}
-        minScale={1}
+        minScale={0.5}
         maxScale={4}
         centerContent
       >
@@ -58,9 +58,10 @@ const ClimbingWall = () => {
           <svg
             ref={svgRef}
             viewBox="0 0 582.24 842.89"
+            preserveAspectRatio="xMidYMid meet"  // Zachowuje proporcje przy skalowaniu
             style={{
-              width: '100%',
-              height: '100%',
+              width: '100vw',  // Wypełnia całą szerokość ekranu
+              height: '100vh', // Wypełnia całą wysokość ekranu
               position: 'relative',
             }}
           >
