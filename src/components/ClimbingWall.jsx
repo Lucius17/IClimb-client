@@ -1,38 +1,39 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import Rating from 'react-rating-stars-component';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const routes = [
-  { id: 1, label: '5A', color: 'red', x: '20%', y: '30%', description: 'Trudna trasa dla zaawansowanych.', comments: 'Wymaga sporej siły', rating: 4 },
-  { id: 2, label: '6B', color: 'blue', x: '50%', y: '60%', description: 'Średnio zaawansowana trasa.', comments: 'Fajna na rozgrzewkę', rating: 3 },
-  { id: 3, label: '7C', color: 'green', x: '80%', y: '40%', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: 'Prawdziwe wyzwanie!', rating: 5 },
+  { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, description: 'Trudna trasa dla zaawansowanych.', comments: 'Wymaga sporej siły', rating: 4 },
+  { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, description: 'Średnio zaawansowana trasa.', comments: 'Fajna na rozgrzewkę', rating: 3 },
+  { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: 'Prawdziwe wyzwanie!', rating: 5 },
 ];
 
 const ClimbingWall = () => {
   const [show, setShow] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [svgContent, setSvgContent] = useState('');
-  const svgContainerRef = useRef(null);
+  const svgRef = useRef(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
-  // Wczytanie SVG i obliczenie wymiarów po jego załadowaniu
+  // Załadowanie SVG
   useLayoutEffect(() => {
     fetch('/wall.svg')
       .then((response) => response.text())
-      .then((data) => {
-        setSvgContent(data);
-
-        // Obliczanie wymiarów SVG po jego załadowaniu
-        const svgContainer = svgContainerRef.current;
-        if (svgContainer) {
-          const { width, height } = svgContainer.getBoundingClientRect();
-          setSvgDimensions({ width, height });
-        }
-      })
+      .then((data) => setSvgContent(data))
       .catch((error) => console.error('Error loading SVG:', error));
   }, []);
 
+  // Ustalamy wymiary SVG po załadowaniu komponentu
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (svg) {
+      setSvgDimensions({ width: svg.viewBox.baseVal.width, height: svg.viewBox.baseVal.height });
+    }
+  }, [svgContent]);
+
+  // Obsługa kliknięcia w marker
   const handleMarkerClick = (route) => {
     setSelectedRoute(route);
     setShow(true);
@@ -40,66 +41,70 @@ const ClimbingWall = () => {
 
   const handleClose = () => setShow(false);
 
+  // Funkcja ograniczająca pozycje markerów, by nie wychodziły poza wymiary SVG
+  const getClampedPosition = (coord, dimension) => {
+    return Math.max(0, Math.min(coord, dimension)); // Zapewnia, że współrzędna będzie w przedziale [0, dimension]
+  };
+
   return (
     <>
-      {/* Renderowanie SVG */}
-      <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
-        <div
-          ref={svgContainerRef}
-          dangerouslySetInnerHTML={{ __html: svgContent }}
-          style={{
-            width: '100%',
-            height: 'auto',
-            position: 'relative',
-            maxWidth: '100%',
-          }}
-        />
+      <TransformWrapper
+        initialScale={1}
+        minScale={1}
+        maxScale={4}
+        centerContent
+      >
+        <TransformComponent>
+          <svg
+            ref={svgRef}
+            viewBox="0 0 582.24 842.89"
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'relative',
+            }}
+          >
+            {/* Renderowanie SVG tła */}
+            <g dangerouslySetInnerHTML={{ __html: svgContent }} />
 
-        {/* Markery na trasach */}
-        <svg
-          style={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none', // Markery nie będą zakłócać interakcji z obrazkiem SVG
-          }}
-        >
-          {routes.map((route) => (
-            <g
-              key={route.id}
-              onClick={() => handleMarkerClick(route)}
-              style={{
-                pointerEvents: 'auto', // Dodajemy pointer-events auto, żeby markery były klikalne
-              }}
-            >
-              <circle
-                cx={`${route.x}`}
-                cy={`${route.y}`}
-                r="15"
-                fill={route.color}
-                style={{
-                  cursor: 'pointer',
-                }}
-              />
-              <text
-                x={`${route.x}`}
-                y={`${route.y}`}
-                fontSize="10"
-                textAnchor="middle"
-                fill="white"
-                fontWeight="bold"
-                dy="4" // Dostosowanie tekstu względem okręgu
-              >
-                {route.label}
-              </text>
-            </g>
-          ))}
-        </svg>
-      </div>
+            {/* Markery */}
+            {routes.map((route) => {
+              // Przekształcenie pozycji markerów do odpowiednich wymiarów SVG
+              const markerX = getClampedPosition(route.x * svgDimensions.width, svgDimensions.width); 
+              const markerY = getClampedPosition(route.y * svgDimensions.height, svgDimensions.height);
 
-      {/* Modal z informacjami */}
+              return (
+                <g
+                  key={route.id}
+                  onClick={() => handleMarkerClick(route)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <circle
+                    cx={markerX}
+                    cy={markerY}
+                    r="15"
+                    fill={route.color}
+                    stroke="black"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x={markerX}
+                    y={markerY + 4}
+                    fontSize="12"
+                    textAnchor="middle"
+                    fill="white"
+                    fontWeight="bold"
+                  >
+                    {route.label}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </TransformComponent>
+      </TransformWrapper>
+
+      {/* Modal */}
       {selectedRoute && (
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
