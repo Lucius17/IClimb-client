@@ -73,14 +73,16 @@ const EditableClimbingWall = () => {
     <>
 
 
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <TransformWrapper
   initialScale={1}
   minScale={0.005}
   maxScale={4}
+  limitToBounds={false}
+  
   doubleClick={{ disabled: true }} // Disable zoom on double-click
 >
   <TransformComponent>
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <svg
         ref={svgRef}
         viewBox="0 0 582.24 842.89"
@@ -122,9 +124,9 @@ const EditableClimbingWall = () => {
           );
         })}
       </svg>
-    </div>
   </TransformComponent>
 </TransformWrapper>
+    </div>
 
 
 

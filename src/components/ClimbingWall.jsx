@@ -48,6 +48,7 @@ const ClimbingWall = () => {
 
   return (
     <>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
@@ -104,6 +105,7 @@ const ClimbingWall = () => {
           </svg>
         </TransformComponent>
       </TransformWrapper>
+      </div>
 
       {/* Modal */}
       {selectedRoute && (
