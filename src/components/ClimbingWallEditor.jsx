@@ -71,13 +71,7 @@ const EditableClimbingWall = () => {
 
   return (
     <>
-      <Button
-        variant="primary"
-        style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}
-        onClick={() => alert('Double-click on the wall to add a new route.')}
-      >
-        Add Route
-      </Button>
+
 
       <TransformWrapper
   initialScale={1}
