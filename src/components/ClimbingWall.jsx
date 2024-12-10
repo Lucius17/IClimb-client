@@ -1,19 +1,21 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Offcanvas, Form } from 'react-bootstrap';
 import Rating from 'react-rating-stars-component';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const routes = [
-  { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, description: 'Trudna trasa dla zaawansowanych.', comments: 'Wymaga sporej siły', rating: 4 },
-  { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, description: 'Średnio zaawansowana trasa.', comments: 'Fajna na rozgrzewkę', rating: 3 },
-  { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: 'Prawdziwe wyzwanie!', rating: 5 },
+  { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: 'Wymaga sporej siły', rating: 4 },
+  { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: 'Fajna na rozgrzewkę', rating: 3 },
+  { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: 'Prawdziwe wyzwanie!', rating: 5 },
 ];
 
 const ClimbingWall = () => {
   const [show, setShow] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [svgContent, setSvgContent] = useState('');
+  const [filteredDifficulty, setFilteredDifficulty] = useState('');
+  const [isSidenavOpen, setIsSidenavOpen] = useState(false);
   const svgRef = useRef(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
@@ -43,68 +45,105 @@ const ClimbingWall = () => {
 
   // Funkcja ograniczająca pozycje markerów, by nie wychodziły poza wymiary SVG
   const getClampedPosition = (coord, dimension) => {
-    return Math.max(0, Math.min(coord, dimension)); // Zapewnia, że współrzędna będzie w przedziale [0, dimension]
+    return Math.max(0, Math.min(coord, dimension));
   };
+
+  // Obsługa filtrowania
+  const handleDifficultyFilter = (difficulty) => {
+    setFilteredDifficulty(difficulty);
+  };
+
+  const filteredRoutes = filteredDifficulty
+    ? routes.filter((route) => route.difficulty === filteredDifficulty)
+    : routes;
 
   return (
     <>
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <TransformWrapper
-        initialScale={1}
-        minScale={0.5}
-        maxScale={4}
-        centerContent
+      {/* Boczne menu */}
+      <Button
+        variant="primary"
+        onClick={() => setIsSidenavOpen(true)}
+        style={{ position: 'fixed', top: 10, left: 10, zIndex: 1000 }}
       >
-        <TransformComponent>
-          <svg
-            ref={svgRef}
-            viewBox="0 0 582.24 842.89"
-            preserveAspectRatio="xMidYMid meet"  // Zachowuje proporcje przy skalowaniu
-            style={{
-              width: '100vw',  // Wypełnia całą szerokość ekranu
-              height: '100vh', // Wypełnia całą wysokość ekranu
-              position: 'relative',
-            }}
-          >
-            {/* Renderowanie SVG tła */}
-            <g dangerouslySetInnerHTML={{ __html: svgContent }} />
+        ☰ Filtry
+      </Button>
 
-            {/* Markery */}
-            {routes.map((route) => {
-              // Przekształcenie pozycji markerów do odpowiednich wymiarów SVG
-              const markerX = getClampedPosition(route.x * svgDimensions.width, svgDimensions.width); 
-              const markerY = getClampedPosition(route.y * svgDimensions.height, svgDimensions.height);
+      <Offcanvas show={isSidenavOpen} onHide={() => setIsSidenavOpen(false)} placement="start">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Filtry</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Poziom trudności</Form.Label>
+              <Form.Select
+                value={filteredDifficulty}
+                onChange={(e) => handleDifficultyFilter(e.target.value)}
+              >
+                <option value="">Wszystkie</option>
+                <option value="easy">Łatwe</option>
+                <option value="medium">Średnie</option>
+                <option value="hard">Trudne</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Offcanvas.Body>
+      </Offcanvas>
 
-              return (
-                <g
-                  key={route.id}
-                  onClick={() => handleMarkerClick(route)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <circle
-                    cx={markerX}
-                    cy={markerY}
-                    r="15"
-                    fill={route.color}
-                    stroke="black"
-                    strokeWidth="2"
-                  />
-                  <text
-                    x={markerX}
-                    y={markerY + 4}
-                    fontSize="12"
-                    textAnchor="middle"
-                    fill="white"
-                    fontWeight="bold"
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <TransformWrapper
+          initialScale={1}
+          minScale={0.5}
+          maxScale={4}
+          centerContent
+        >
+          <TransformComponent>
+            <svg
+              ref={svgRef}
+              viewBox="0 0 582.24 842.89"
+              preserveAspectRatio="xMidYMid meet"
+              style={{
+                width: '100vw',
+                height: '100vh',
+                position: 'relative',
+              }}
+            >
+              <g dangerouslySetInnerHTML={{ __html: svgContent }} />
+
+              {filteredRoutes.map((route) => {
+                const markerX = getClampedPosition(route.x * svgDimensions.width, svgDimensions.width);
+                const markerY = getClampedPosition(route.y * svgDimensions.height, svgDimensions.height);
+
+                return (
+                  <g
+                    key={route.id}
+                    onClick={() => handleMarkerClick(route)}
+                    style={{ cursor: 'pointer' }}
                   >
-                    {route.label}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-        </TransformComponent>
-      </TransformWrapper>
+                    <circle
+                      cx={markerX}
+                      cy={markerY}
+                      r="15"
+                      fill={route.color}
+                      stroke="black"
+                      strokeWidth="2"
+                    />
+                    <text
+                      x={markerX}
+                      y={markerY + 4}
+                      fontSize="12"
+                      textAnchor="middle"
+                      fill="white"
+                      fontWeight="bold"
+                    >
+                      {route.label}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          </TransformComponent>
+        </TransformWrapper>
       </div>
 
       {/* Modal */}
