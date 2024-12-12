@@ -1,12 +1,13 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, ListGroup } from 'react-bootstrap';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const EditableClimbingWall = () => {
   const [routes, setRoutes] = useState([
-    { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, description: 'Trudna trasa dla zaawansowanych.', comments: 'Wymaga sporej siły', rating: 4 },
-    { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, description: 'Średnio zaawansowana trasa.', comments: 'Fajna na rozgrzewkę', rating: 3 },
+    { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
+    { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
+    { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },
   ]);
   const [showModal, setShowModal] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
@@ -14,7 +15,6 @@ const EditableClimbingWall = () => {
   const svgRef = useRef(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
-  // Load SVG background
   useLayoutEffect(() => {
     fetch('/wall.svg')
       .then((response) => response.text())
@@ -22,7 +22,6 @@ const EditableClimbingWall = () => {
       .catch((error) => console.error('Error loading SVG:', error));
   }, []);
 
-  // Get SVG dimensions
   useEffect(() => {
     const svg = svgRef.current;
     if (svg) {
@@ -30,7 +29,6 @@ const EditableClimbingWall = () => {
     }
   }, [svgContent]);
 
-  // Handle adding a new route
   const handleAddRoute = (event) => {
     const rect = svgRef.current.getBoundingClientRect();
     const newRoute = {
@@ -40,7 +38,7 @@ const EditableClimbingWall = () => {
       x: (event.clientX - rect.left) / rect.width,
       y: (event.clientY - rect.top) / rect.height,
       description: '',
-      comments: '',
+      comments: [],
       rating: 0,
     };
     setRoutes([...routes, newRoute]);
@@ -65,70 +63,73 @@ const EditableClimbingWall = () => {
     setShowModal(false);
   };
 
+  const handleDeleteComment = (commentIndex) => {
+    setSelectedRoute((prevRoute) => {
+      const updatedComments = [...prevRoute.comments];
+      updatedComments.splice(commentIndex, 1);
+      return { ...prevRoute, comments: updatedComments };
+    });
+  };
+
   const getClampedPosition = (coord, dimension) => {
     return Math.max(0, Math.min(coord, dimension));
   };
 
   return (
     <>
-
-
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <TransformWrapper
-  initialScale={1}
-  minScale={0.005}
-  maxScale={4}
-  limitToBounds={false}
-  
-  doubleClick={{ disabled: true }} // Disable zoom on double-click
->
-  <TransformComponent>
-      <svg
-        ref={svgRef}
-        viewBox="0 0 582.24 842.89"
-        preserveAspectRatio="xMidYMid meet"
-        style={{ width: '80vw', height: 'auto', position: 'relative' }}
-        onDoubleClick={handleAddRoute}
-      >
-        <g dangerouslySetInnerHTML={{ __html: svgContent }} />
-
-        {routes.map((route) => {
-          const markerX = route.x * svgDimensions.width;
-          const markerY = route.y * svgDimensions.height;
-
-          return (
-            <g
-              key={route.id}
-              onClick={() => handleMarkerClick(route)}
-              style={{ cursor: 'pointer' }}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <TransformWrapper
+          initialScale={1}
+          minScale={0.005}
+          maxScale={4}
+          limitToBounds={false}
+          doubleClick={{ disabled: true }}
+        >
+          <TransformComponent>
+            <svg
+              ref={svgRef}
+              viewBox="0 0 582.24 842.89"
+              preserveAspectRatio="xMidYMid meet"
+              style={{ width: '80vw', height: 'auto', position: 'relative' }}
+              onDoubleClick={handleAddRoute}
             >
-              <circle
-                cx={markerX}
-                cy={markerY}
-                r="15"
-                fill={route.color}
-                stroke="black"
-                strokeWidth="2"
-              />
-              <text
-                x={markerX}
-                y={markerY + 4}
-                fontSize="12"
-                textAnchor="middle"
-                fill="white"
-                fontWeight="bold"
-              >
-                {route.label}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-  </TransformComponent>
-</TransformWrapper>
-    </div>
+              <g dangerouslySetInnerHTML={{ __html: svgContent }} />
 
+              {routes.map((route) => {
+                const markerX = route.x * svgDimensions.width;
+                const markerY = route.y * svgDimensions.height;
 
+                return (
+                  <g
+                    key={route.id}
+                    onClick={() => handleMarkerClick(route)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <circle
+                      cx={markerX}
+                      cy={markerY}
+                      r="15"
+                      fill={route.color}
+                      stroke="black"
+                      strokeWidth="2"
+                    />
+                    <text
+                      x={markerX}
+                      y={markerY + 4}
+                      fontSize="12"
+                      textAnchor="middle"
+                      fill="white"
+                      fontWeight="bold"
+                    >
+                      {route.label}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          </TransformComponent>
+        </TransformWrapper>
+      </div>
 
       {selectedRoute && (
         <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -163,6 +164,25 @@ const EditableClimbingWall = () => {
                 />
               </Form.Group>
             </Form>
+
+            <hr />
+
+            <h5>Comments</h5>
+            <ListGroup>
+              {selectedRoute.comments.map((comment, index) => (
+                <ListGroup.Item key={index}>
+                  <strong>{comment.nick}</strong>: {comment.text} ({comment.rating}/5)
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    style={{ float: 'right' }}
+                    onClick={() => handleDeleteComment(index)}
+                  >
+                    Delete
+                  </Button>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="danger" onClick={() => handleDeleteRoute(selectedRoute.id)}>
