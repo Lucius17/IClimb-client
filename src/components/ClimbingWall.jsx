@@ -5,9 +5,9 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const routes = [
-  { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: 'Wymaga sporej siły', rating: 4 },
-  { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: 'Fajna na rozgrzewkę', rating: 3 },
-  { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: 'Prawdziwe wyzwanie!', rating: 5 },
+  { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
+  { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
+  { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },
 ];
 
 const ClimbingWall = () => {
@@ -16,6 +16,10 @@ const ClimbingWall = () => {
   const [svgContent, setSvgContent] = useState('');
   const [filteredDifficulty, setFilteredDifficulty] = useState('');
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [newNick, setNewNick] = useState(''); //dodaj pobieranie nicku
+
+  const [newRating, setNewRating] = useState(0);
   const svgRef = useRef(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
@@ -51,6 +55,19 @@ const ClimbingWall = () => {
   // Obsługa filtrowania
   const handleDifficultyFilter = (difficulty) => {
     setFilteredDifficulty(difficulty);
+  };
+
+  const handleAddComment = () => {
+    if (newComment.trim() && newNick.trim() && selectedRoute) {
+      const newCommentObject = { text: newComment.trim(), nick: newNick.trim(), rating: newRating };
+      setSelectedRoute((prev) => ({
+        ...prev,
+        comments: [...prev.comments, newCommentObject],
+      }));
+      setNewComment('');
+      setNewNick('');
+      setNewRating(0);
+    }
   };
 
   const filteredRoutes = filteredDifficulty
@@ -154,9 +171,41 @@ const ClimbingWall = () => {
           </Modal.Header>
           <Modal.Body>
             <p><strong>Opis:</strong> {selectedRoute.description}</p>
-            <p><strong>Komentarze:</strong> {selectedRoute.comments}</p>
-            <div>
-              <strong>Ocena:</strong>
+            <p><strong>Komentarze:</strong></p>
+            <ul>
+              {selectedRoute.comments.map((comment, index) => (
+                <li key={index}>
+                  <strong>{comment.nick}:</strong> {comment.text} 
+                  <Rating value={comment.rating} count={5} size={16} activeColor="#ffd700" edit={false} />
+                </li>
+              ))}
+            </ul>
+            <Form>
+              <Form.Group className="mt-3">
+                <Form.Label>Komentarz</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Wpisz swój komentarz"
+                />
+              </Form.Group>
+              <Form.Group className="mt-3">
+                <Form.Label>Ocena</Form.Label>
+                <Rating
+                  value={newRating}
+                  count={5}
+                  size={24}
+                  activeColor="#ffd700"
+                  onChange={(value) => setNewRating(value)}
+                />
+              </Form.Group>
+              <Button className="mt-2" variant="primary" onClick={handleAddComment}>
+                Dodaj komentarz
+              </Button>
+            </Form>
+            <div className="mt-3">
+              <strong>Średnia ocena:</strong>
               <Rating value={selectedRoute.rating} count={5} size={24} activeColor="#ffd700" edit={false} />
             </div>
           </Modal.Body>
