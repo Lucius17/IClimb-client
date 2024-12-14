@@ -84,7 +84,7 @@ function AdminPanel() {
           {/* <Route path="users" element={<Users />} /> */}
           <Route path="walls" element={<Walls />} />
           <Route path="news" element={<News />} />
-          <Route path="info" element={<Info />} />
+          <Route path="info" element={<Info centerId={centerId} />} />
           <Route path="moderators" element={<Moderators />} />
         </Routes>
       </div>
