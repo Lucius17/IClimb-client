@@ -56,8 +56,9 @@ function App() {
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
               <Route path="/forgot-password" element={<ForgotPassword/>}/>
               <Route path="/sectors" element={<Sectors/>}/>
+              <Route path="/sectors/:gymId" element={<Sectors/>} />
               <Route path="/verify/:token" element={<VerifyEmail/>}/>
-              
+
               <Route path="*" element={<Navigate to="/"/>}/>
 
 
