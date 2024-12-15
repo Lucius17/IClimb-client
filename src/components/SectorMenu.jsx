@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import PropTypes from 'prop-types';
 
 function SectorMenu({ onSelectSector }) {
@@ -19,3 +19,4 @@ SectorMenu.propTypes = {
 };
 
 export default SectorMenu;
+*/

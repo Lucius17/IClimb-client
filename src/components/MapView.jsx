@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Menu from './Menu.jsx';
+import api from  '/src/api.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -40,11 +41,26 @@ function CenterMapOnMarker({ position }) {
 function MapView({ height = '100vh' }) {
   const [userLocation, setUserLocation] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [markers, setMarkers] = useState([
-    { id: 1, position: [52.2297, 21.0122], name: "Siłownia A" },
-    { id: 2, position: [52.2307, 21.0132], name: "Siłownia B" },
-  ]);
+  const [markers, setMarkers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    api.get('/gyms/Gym') // Replace with your backend endpoint for gyms
+        .then((response) => {
+          const gymData = response.data; // Assuming the API returns an array of gyms
+          const formattedMarkers = gymData
+              .filter((gym) => gym.position && gym.position.lat && gym.position.lng) // Ensure position exists
+              .map((gym) => ({
+                id: gym._id,
+                position: [gym.position.lat, gym.position.lng],
+                name: gym.name,
+              }));
+          setMarkers(formattedMarkers);
+        })
+        .catch((error) => {
+          console.error("Error fetching gym data:", error);
+        });
+  }, []);
 
 const filteredMarkers = searchQuery
   ? markers.filter(marker =>

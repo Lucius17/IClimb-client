@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import api from '/src/api.js'
 
 
 
 function Info() {
   const [address, setAddress] = useState('');
+  const { centerId } = useParams();
   const [coordinates, setCoordinates] = useState([51.505, -0.09]);
   const [hours, setHours] = useState({
     monday: { open: '', close: '' },
@@ -21,13 +24,66 @@ function Info() {
   const [priceWithMultisport, setPriceWithMultisport] = useState('');
   const [gymMembership, setGymMembership] = useState('');
 
-  const handleSave = () => {
-    alert(
-      `Address: ${address}, Coordinates: ${coordinates}, Hours: ${JSON.stringify(
-        hours
-      )}, Price: ${price}, Price With Multisport: ${priceWithMultisport}, Gym Membership: ${gymMembership}`
-    );
-  };
+    useEffect(() => {
+        api.get(`/gyms/Gym/${centerId}`)
+            .then((response) => {
+                const { address, position, openingHours, price, priceWithMultisport, gymMembership } = response.data;
+
+                const defaultHours = {
+                    monday: { open: '', close: '' },
+                    tuesday: { open: '', close: '' },
+                    wednesday: { open: '', close: '' },
+                    thursday: { open: '', close: '' },
+                    friday: { open: '', close: '' },
+                    saturday: { open: '', close: '' },
+                    sunday: { open: '', close: '' },
+                };
+
+                const hoursObject = openingHours.reduce((acc, day) => {
+                    acc[day.day.toLowerCase()] = { open: day.open, close: day.close };
+                    return acc;
+                }, {});
+
+                if (position && position.lat && position.lng) {
+                    setCoordinates([position.lat, position.lng]);
+                }
+                setAddress(address || '');
+                setHours({ ...defaultHours, ...hoursObject });
+                setPrice(price || '');
+                setPriceWithMultisport(priceWithMultisport || '');
+                setGymMembership(gymMembership || '');
+            })
+            .catch((error) => {
+                console.error('Error fetching gym data:', error);
+            });
+    }, [centerId]);
+
+    const handleSave = () => {
+        const updatedGymData = {
+            address,
+            position: {
+                lat: coordinates[0],
+                lng: coordinates[1],
+            },
+            openingHours: Object.keys(hours).map((day) => ({
+                day: day.charAt(0).toUpperCase() + day.slice(1), // Capitalize day
+                open: hours[day].open,
+                close: hours[day].close,
+            })),
+            price,
+            priceWithMultisport,
+            gymMembership,
+        };
+
+        api.put(`/gyms/Gym/${centerId}`, updatedGymData)
+            .then((response) => {
+                alert('Gym updated successfully!');
+            })
+            .catch((error) => {
+                console.error('Error updating gym:', error);
+                alert('Failed to update gym. Please try again.');
+            });
+    };
 
   const LocationMarker = () => {
     useMapEvents({
