@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import api from '/src/api.js'
 function Profile() {
   const [avatar, setAvatar] = useState('https://via.placeholder.com/150'); // Użycie URL jako placeholder
   const [gymName, setGymName] = useState('Gym Warszawa');
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   
 
@@ -20,6 +21,53 @@ function Profile() {
   });
   
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await api.get('/auth/me');
+        if (response.data) {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            ...response.data,
+          }));
+          console.log('Gym ID:', formData.gym); // Should print the ID string, not an object
+          if (response.data.gymName) setGymName(response.data.gymName);
+        } else {
+          console.error('No user data returned from API');
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchGymName = async () => {
+      if (formData.gym) {
+        try {
+
+          const gymId = formData.gym.toString();
+          const response = await api.get(`/gyms/Gym/${gymId}`);
+
+          if (response.data) {
+
+            setGymName(response.data.name);
+          } else {
+            console.error('Gym not found');
+          }
+        } catch (error) {
+          console.error('Failed to fetch GymName:', error);
+        }
+      }
+    };
+
+    fetchGymName();
+  }, [formData.gym]); // Dependency on formData.gym to trigger the effect
 
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
@@ -35,13 +83,19 @@ function Profile() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSave = () => {
-    setAvatar(formData.avatar);
-    setGymName(formData.gymName);
-    setIsEditing(false);
-    alert('Profil zapisany!');
+  const handleSave = async () => {
+    try {
+      const response = await api.put('users/me', formData);
+      if (response.data.user) {
+        setFormData(response.data.user);
+        setIsEditing(false);
+        alert('Profile updated successfully!');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile. Please try again.');
+    }
   };
-
   const activityData = {
     labels: ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek'],
     datasets: [

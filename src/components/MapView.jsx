@@ -45,11 +45,11 @@ function MapView({ height = '100vh' }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    api.get('/gyms/Gym') // Replace with your backend endpoint for gyms
+    api.get('/gyms/Gym')
         .then((response) => {
-          const gymData = response.data; // Assuming the API returns an array of gyms
+          const gymData = response.data;
           const formattedMarkers = gymData
-              .filter((gym) => gym.position && gym.position.lat && gym.position.lng) // Ensure position exists
+              .filter((gym) => gym.position && gym.position.lat && gym.position.lng)
               .map((gym) => ({
                 id: gym._id,
                 position: [gym.position.lat, gym.position.lng],
@@ -76,6 +76,16 @@ const filteredMarkers = searchQuery
     setSelectedMarker(marker);
     setSearchQuery(marker.name);
   };
+
+    const handleSelectGym = async (gymId) => {
+        try {
+            const response = await api.put('/users/me', { gym: gymId });
+            alert(`${response.data.message || 'Gym selected successfully!'}`);
+        } catch (error) {
+            console.error('Error updating gym:', error);
+            alert('Failed to select gym. Please try again.');
+        }
+    };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -127,17 +137,20 @@ const filteredMarkers = searchQuery
           <Marker key={marker.id} position={marker.position} eventHandlers={{ click: () => handleMarkerClick(marker) }}>
             {selectedMarker === marker && (
               <Popup position={marker.position}>
-                <div>
-                  <p>{marker.name}</p>
-                  <button className="btn btn-primary" onClick={() => alert(`${marker.name} wybrana!`)}>
-                    Wybierz
-                  </button>
-                </div>
+                  <div>
+                      <p>{marker.name}</p>
+                      <button
+                          className="btn btn-primary"
+                          onClick={() => handleSelectGym(marker.id)}
+                      >
+                          Wybierz
+                      </button>
+                  </div>
               </Popup>
             )}
           </Marker>
         ))}
-        {selectedMarker && <CenterMapOnMarker position={selectedMarker.position} />}
+          {selectedMarker && <CenterMapOnMarker position={selectedMarker.position} />}
       </MapContainer>
       <Menu />
     </div>
