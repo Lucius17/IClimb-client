@@ -57,12 +57,16 @@ const manifestForPlugin = {
   },
 };
 
-//Bła
-
 // https://vitejs.dev/config/
 export default defineConfig({
   
   plugins: [react(), VitePWA(manifestForPlugin)],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/tests/setup.js',
+
+  },
 });
 
 

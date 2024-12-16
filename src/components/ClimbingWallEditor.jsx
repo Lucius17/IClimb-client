@@ -3,7 +3,7 @@ import { Modal, Button, Form, ListGroup } from 'react-bootstrap';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const EditableClimbingWall = () => {
+const ClimbingWallEditor = () => {
   const [routes, setRoutes] = useState([
     { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
     { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
@@ -201,4 +201,4 @@ const EditableClimbingWall = () => {
   );
 };
 
-export default EditableClimbingWall;
+export default ClimbingWallEditor;
