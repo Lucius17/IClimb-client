@@ -50,7 +50,7 @@ function App() {
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/wall/:id" element={<ClimbingWall/>}/>
-              <Route path="/edytor/:id" element={<ClimbingWallEditor/>}/>
+              <Route path="/edytor/:gymId" element={<ClimbingWallEditor/>}/>
               <Route path="/admin/*" element={<AdminPanel/>}/>
               <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>

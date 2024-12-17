@@ -7,10 +7,11 @@ import api from "/src/api.js"
 
 const ClimbingWallEditor = () => {
   const { gymId } = useParams();
+  // console.log('gymId:', gymId);
   const [routes, setRoutes] = useState([
-    { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
-    { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6,  description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
-    { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4,  description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },
+    /*{ id:1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
+    { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
+    { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },*/
   ]);
   const [showModal, setShowModal] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
@@ -186,47 +187,14 @@ const ClimbingWallEditor = () => {
           </Modal.Header>
           <Modal.Body>
             <Form>
-            <Form.Group>
-  <Form.Label>Difficulty (French Scale)</Form.Label>
-  <Form.Select
-    value={selectedRoute.label}
-    onChange={(e) => setSelectedRoute({ ...selectedRoute, label: e.target.value })}
-  >
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5A">5A</option>
-    <option value="5A">5A</option>
-    <option value="5B">5B</option>
-    <option value="5C">5C</option>
-    <option value="6A">6A</option>
-    <option value="6A+">6A+</option>
-    <option value="6B">6B</option>
-    <option value="6B+">6B+</option>
-    <option value="6C">6C</option>
-    <option value="6C+">6C+</option>
-    <option value="7A">7A</option>
-    <option value="7A+">7A+</option>
-    <option value="7B">7B</option>
-    <option value="7B+">7B+</option>
-    <option value="7C">7C</option>
-    <option value="7C+">7C+</option>
-    <option value="8A">8A</option>
-    <option value="8A+">8A+</option>
-    <option value="8B">8B</option>
-    <option value="8B+">8B+</option>
-    <option value="8C">8C</option>
-    <option value="8C+">8C+</option>
-    <option value="9A">9A</option>
-    <option value="9A+">9A+</option>
-    <option value="9B">9B</option>
-    <option value="9B+">9B+</option>
-    <option value="9C">9C</option>
-    <option value="9C+">9C+</option>
-  </Form.Select>
-</Form.Group>
-
+              <Form.Group>
+                <Form.Label>Label</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={selectedRoute.label}
+                  onChange={(e) => setSelectedRoute({ ...selectedRoute, label: e.target.value })}
+                />
+              </Form.Group>
               <Form.Group>
                 <Form.Label>Color</Form.Label>
                 <Form.Control
