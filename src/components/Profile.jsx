@@ -31,7 +31,11 @@ function Profile() {
             ...prevFormData,
             ...response.data,
           }));
-          if (response.data.gym.name) setGymName(response.data.gym.name);
+          if (response.data.gym?.name) {
+            setGymName(response.data.gym.name);
+          } else {
+            setGymName('No gym selected');
+          }
         } else {
           console.error('No user data returned from API');
         }
