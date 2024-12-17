@@ -49,13 +49,12 @@ function App() {
               <Route path="/gym" element={<MapView/>}/>
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
-              <Route path="/test" element={<ClimbingWall/>}/>
-              <Route path="/edytor" element={<ClimbingWallEditor/>}/>
+              <Route path="/wall/:id" element={<ClimbingWall/>}/>
+              <Route path="/edytor/:id" element={<ClimbingWallEditor/>}/>
               <Route path="/admin/*" element={<AdminPanel/>}/>
               <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
               <Route path="/forgot-password" element={<ForgotPassword/>}/>
-              <Route path="/sectors" element={<Sectors/>}/>
               <Route path="/sectors/:gymId" element={<Sectors/>} />
               <Route path="/verify/:token" element={<VerifyEmail/>}/>
 
