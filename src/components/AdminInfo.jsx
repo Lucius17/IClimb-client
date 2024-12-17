@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import api from '/src/api.js'
-
-
+import axios from 'axios';
+import api from '/src/api.js';
 
 function Info() {
   const [address, setAddress] = useState('');
@@ -24,74 +23,129 @@ function Info() {
   const [priceWithMultisport, setPriceWithMultisport] = useState('');
   const [gymMembership, setGymMembership] = useState('');
 
-    useEffect(() => {
-        api.get(`/gyms/Gym/${centerId}`)
-            .then((response) => {
-                const { address, position, openingHours, price, priceWithMultisport, gymMembership } = response.data;
+  // Geocoding API function
+  const geocodeAddress = async (address) => {
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+        params: {
+          q: address,
+          format: 'json',
+          addressdetails: 1,
+        },
+      });
+      if (response.data && response.data.length > 0) {
+        const { lat, lon } = response.data[0];
+        setCoordinates([parseFloat(lat), parseFloat(lon)]);
+      }
+    } catch (error) {
+      console.error('Error geocoding address:', error);
+    }
+  };
 
-                const defaultHours = {
-                    monday: { open: '', close: '' },
-                    tuesday: { open: '', close: '' },
-                    wednesday: { open: '', close: '' },
-                    thursday: { open: '', close: '' },
-                    friday: { open: '', close: '' },
-                    saturday: { open: '', close: '' },
-                    sunday: { open: '', close: '' },
-                };
-
-                const hoursObject = openingHours.reduce((acc, day) => {
-                    acc[day.day.toLowerCase()] = { open: day.open, close: day.close };
-                    return acc;
-                }, {});
-
-                if (position && position.lat && position.lng) {
-                    setCoordinates([position.lat, position.lng]);
-                }
-                setAddress(address || '');
-                setHours({ ...defaultHours, ...hoursObject });
-                setPrice(price || '');
-                setPriceWithMultisport(priceWithMultisport || '');
-                setGymMembership(gymMembership || '');
-            })
-            .catch((error) => {
-                console.error('Error fetching gym data:', error);
-            });
-    }, [centerId]);
-
-    const handleSave = () => {
-        const updatedGymData = {
-            address,
-            position: {
-                lat: coordinates[0],
-                lng: coordinates[1],
-            },
-            openingHours: Object.keys(hours).map((day) => ({
-                day: day.charAt(0).toUpperCase() + day.slice(1), // Capitalize day
-                open: hours[day].open,
-                close: hours[day].close,
-            })),
-            price,
-            priceWithMultisport,
-            gymMembership,
+  useEffect(() => {
+    // Fetch gym data
+    api.get(`/gyms/Gym/${centerId}`)
+      .then((response) => {
+        const { address, position, openingHours, price, priceWithMultisport, gymMembership } = response.data;
+        
+        const defaultHours = {
+          monday: { open: '', close: '' },
+          tuesday: { open: '', close: '' },
+          wednesday: { open: '', close: '' },
+          thursday: { open: '', close: '' },
+          friday: { open: '', close: '' },
+          saturday: { open: '', close: '' },
+          sunday: { open: '', close: '' },
         };
 
-        api.put(`/gyms/Gym/${centerId}`, updatedGymData)
-            .then((response) => {
-                alert('Gym updated successfully!');
-            })
-            .catch((error) => {
-                console.error('Error updating gym:', error);
-                alert('Failed to update gym. Please try again.');
-            });
+        const hoursObject = openingHours.reduce((acc, day) => {
+          acc[day.day.toLowerCase()] = { open: day.open, close: day.close };
+          return acc;
+        }, {});
+
+        if (position && position.lat && position.lng) {
+          setCoordinates([position.lat, position.lng]);
+        }
+        setHours({ ...defaultHours, ...hoursObject });
+        setPrice(price || '');
+        setPriceWithMultisport(priceWithMultisport || '');
+        setGymMembership(gymMembership || '');
+        setAddress(response.data.location || '');
+      })
+      .catch((error) => {
+        console.error('Error fetching gym data:', error);
+      });
+  }, [centerId]);
+
+  // Automatically search for address if not empty
+  useEffect(() => {
+    if (address && address !== '') {
+      geocodeAddress(address);
+    }
+  }, [address]);
+
+  const handleSave = () => {
+    const updatedGymData = {
+      address,
+      position: {
+        lat: coordinates[0],
+        lng: coordinates[1],
+      },
+      openingHours: Object.keys(hours).map((day) => ({
+        day: day.charAt(0).toUpperCase() + day.slice(1), // Capitalize day
+        open: hours[day].open,
+        close: hours[day].close,
+      })),
+      price,
+      priceWithMultisport,
+      gymMembership,
     };
 
+    api.put(`/gyms/Gym/${centerId}`, updatedGymData)
+      .then((response) => {
+        alert('Gym updated successfully!');
+      })
+      .catch((error) => {
+        console.error('Error updating gym:', error);
+        alert('Failed to update gym. Please try again.');
+      });
+  };
+
   const LocationMarker = () => {
-    useMapEvents({
-      click(e) {
-        setCoordinates([e.latlng.lat, e.latlng.lng]);
-      },
-    });
+    useMap(); // This hook allows access to the map instance
     return coordinates ? <Marker position={coordinates}></Marker> : null;
+  };
+
+  // Component that will update the map center
+  const UpdateMapCenter = () => {
+    const map = useMap(); // Access map instance
+    useEffect(() => {
+      if (coordinates) {
+        map.setView(coordinates, 13); // Set map center and zoom level
+      }
+    }, [coordinates, map]);
+    return null;
+  };
+
+  const handleAddressSearch = async () => {
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+        params: {
+          q: address,
+          format: 'json',
+          addressdetails: 1,
+          limit: 1,
+        },
+      });
+      const { lat, lon } = response.data[0] || {};
+      if (lat && lon) {
+        setCoordinates([parseFloat(lat), parseFloat(lon)]);
+      } else {
+        alert('Address not found!');
+      }
+    } catch (error) {
+      console.error('Error fetching address coordinates:', error);
+    }
   };
 
   return (
@@ -100,12 +154,15 @@ function Info() {
 
       <div className="form-group">
         <label>Address</label>
-        <input
-          type="text"
-          className="form-control"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
+        <div className="d-flex">
+          <input
+            type="text"
+            className="form-control"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          <button className="btn btn-secondary ms-2" onClick={handleAddressSearch}>Search</button>
+        </div>
       </div>
 
       <div className="form-group">
@@ -176,6 +233,7 @@ function Info() {
         <label>Map - Click to set coordinates</label>
         <MapContainer center={coordinates} zoom={13} style={{ height: '300px', width: '100%' }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <UpdateMapCenter />
           <LocationMarker />
         </MapContainer>
       </div>
