@@ -7,7 +7,7 @@ import api from '/src/api.js'
 
 function Profile() {
   const [avatar, setAvatar] = useState('https://via.placeholder.com/150'); // Użycie URL jako placeholder
-  const [gymName, setGymName] = useState('Gym Warszawa');
+  const [gymName, setGymName] = useState('');
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -31,8 +31,7 @@ function Profile() {
             ...prevFormData,
             ...response.data,
           }));
-          console.log('Gym ID:', formData.gym); // Should print the ID string, not an object
-          if (response.data.gymName) setGymName(response.data.gymName);
+          if (response.data.gym.name) setGymName(response.data.gym.name);
         } else {
           console.error('No user data returned from API');
         }
@@ -45,29 +44,6 @@ function Profile() {
 
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    const fetchGymName = async () => {
-      if (formData.gym) {
-        try {
-
-          const gymId = formData.gym.toString();
-          const response = await api.get(`/gyms/Gym/${gymId}`);
-
-          if (response.data) {
-
-            setGymName(response.data.name);
-          } else {
-            console.error('Gym not found');
-          }
-        } catch (error) {
-          console.error('Failed to fetch GymName:', error);
-        }
-      }
-    };
-
-    fetchGymName();
-  }, [formData.gym]); // Dependency on formData.gym to trigger the effect
 
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
