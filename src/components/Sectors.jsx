@@ -4,7 +4,7 @@ import api from '/src/api.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Sectors = () => {
-	const { gymId } = useParams(); // Extract gym ID from the URL
+	const { gymId } = useParams();
 	const [sectors, setSectors] = useState([]);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
