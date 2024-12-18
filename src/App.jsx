@@ -51,12 +51,12 @@ function App() {
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/test/:gymId" element={<ClimbingWall/>}/>
               <Route path="/edytor" element={<ClimbingWallEditor/>}/>
+              <Route path="/wall/:gymId" element={<ClimbingWall/>}/>
               <Route path="/edytor/:gymId" element={<ClimbingWallEditor/>}/>
               <Route path="/admin/*" element={<AdminPanel/>}/>
               <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
               <Route path="/forgot-password" element={<ForgotPassword/>}/>
-              <Route path="/sectors" element={<Sectors/>}/>
               <Route path="/sectors/:gymId" element={<Sectors/>} />
               <Route path="/verify/:token" element={<VerifyEmail/>}/>
 

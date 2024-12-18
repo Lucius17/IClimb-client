@@ -7,6 +7,7 @@ import api from "/src/api.js"
 
 const ClimbingWallEditor = () => {
   const { gymId } = useParams();
+  // console.log('gymId:', gymId);
   const [routes, setRoutes] = useState([
     /*{ id:1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
     { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },

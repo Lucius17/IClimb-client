@@ -6,28 +6,37 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from '/src/api.js'
 
+
+// Mapowanie etykiety na kategorię
+const getDifficultyCategory = (label) => {
+  const labelValue = label.toUpperCase();
+  if (['1', '2', '3', '4', '5A', '5B', '5C', '6A'].includes(labelValue)) return 'Beginner';
+  if (['6A+', '6B', '6B+', '6C', '6C+', '7A', '7A+'].includes(labelValue)) return 'Intermediate';
+  if (['7B', '7B+', '7C', '7C+', '8A', '8A+'].includes(labelValue)) return 'Advanced';
+  if (['8B', '8B+', '8C', '8C+', '9A', '9A+', '9B', '9B+', '9C', '9C+'].includes(labelValue)) return 'Pro';
+  return null;
+};
+
 const ClimbingWall = () => {
+  const [show, setShow] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState(null);
   const { gymId } = useParams();
   const [routes, setRoutes] = useState([
     { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
     { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
     { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },
   ]);
-  const [show, setShow] = useState(false);
-  const [selectedRoute, setSelectedRoute] = useState(null);
   const [svgContent, setSvgContent] = useState('');
-  const [filteredDifficulty, setFilteredDifficulty] = useState('');
+  const [filteredCategory, setFilteredCategory] = useState('');
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [newNick, setNewNick] = useState(''); //dodaj pobieranie nicku
-
+  const [newNick, setNewNick] = useState('');
   const [newRating, setNewRating] = useState(0);
   const svgRef = useRef(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (gymId) {
-      // Fetch gym details by ID
       api.get(`/gyms/Gym/${gymId}`)
           .then((response) => {
             const { routes } = response.data;
@@ -47,7 +56,6 @@ const ClimbingWall = () => {
       .catch((error) => console.error('Error loading SVG:', error));
   }, []);
 
-  // Ustalamy wymiary SVG po załadowaniu komponentu
   useEffect(() => {
     const svg = svgRef.current;
     if (svg) {
@@ -55,7 +63,6 @@ const ClimbingWall = () => {
     }
   }, [svgContent]);
 
-  // Obsługa kliknięcia w marker
   const handleMarkerClick = (route) => {
     setSelectedRoute(route);
     setShow(true);
@@ -63,14 +70,12 @@ const ClimbingWall = () => {
 
   const handleClose = () => setShow(false);
 
-  // Funkcja ograniczająca pozycje markerów, by nie wychodziły poza wymiary SVG
   const getClampedPosition = (coord, dimension) => {
     return Math.max(0, Math.min(coord, dimension));
   };
 
-  // Obsługa filtrowania
-  const handleDifficultyFilter = (difficulty) => {
-    setFilteredDifficulty(difficulty);
+  const handleCategoryFilter = (category) => {
+    setFilteredCategory(category);
   };
 
   useEffect(() => {
@@ -112,9 +117,8 @@ const ClimbingWall = () => {
     }
   };
 
-
-  const filteredRoutes = filteredDifficulty
-    ? routes.filter((route) => route.difficulty === filteredDifficulty)
+  const filteredRoutes = filteredCategory
+    ? routes.filter((route) => getDifficultyCategory(route.label) === filteredCategory)
     : routes;
 
   return (
@@ -135,15 +139,16 @@ const ClimbingWall = () => {
         <Offcanvas.Body>
           <Form>
             <Form.Group>
-              <Form.Label>Poziom trudności</Form.Label>
+              <Form.Label>Difficulty</Form.Label>
               <Form.Select
-                value={filteredDifficulty}
-                onChange={(e) => handleDifficultyFilter(e.target.value)}
+                value={filteredCategory}
+                onChange={(e) => handleCategoryFilter(e.target.value)}
               >
-                <option value="">Wszystkie</option>
-                <option value="easy">Łatwe</option>
-                <option value="medium">Średnie</option>
-                <option value="hard">Trudne</option>
+                <option value="">All</option>
+                <option value="Beginner">Beginner (1-6a)</option>
+                <option value="Intermediate">Intermediate (6a-7a+)</option>
+                <option value="Advanced">Advanced (7b-8b)</option>
+                <option value="Pro">Pro (8b+-9b+)</option>
               </Form.Select>
             </Form.Group>
           </Form>
@@ -151,22 +156,13 @@ const ClimbingWall = () => {
       </Offcanvas>
 
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <TransformWrapper
-          initialScale={1}
-          minScale={0.5}
-          maxScale={4}
-          centerContent
-        >
+        <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerContent>
           <TransformComponent>
             <svg
               ref={svgRef}
               viewBox="0 0 582.24 842.89"
               preserveAspectRatio="xMidYMid meet"
-              style={{
-                width: '100vw',
-                height: '100vh',
-                position: 'relative',
-              }}
+              style={{ width: '100vw', height: '100vh', position: 'relative' }}
             >
               <g dangerouslySetInnerHTML={{ __html: svgContent }} />
 
@@ -218,7 +214,7 @@ const ClimbingWall = () => {
             <ul>
               {selectedRoute.comments.map((comment, index) => (
                 <li key={index}>
-                  <strong>{comment.nick}:</strong> {comment.text}
+                  <strong>{comment.nick}:</strong> {comment.text} 
                   <Rating value={comment.rating} count={5} size={16} activeColor="#ffd700" edit={false} />
                 </li>
               ))}
