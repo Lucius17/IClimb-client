@@ -147,6 +147,8 @@ const ClimbingWall = () => {
                       textAnchor="middle"
                       fill="white"
                       fontWeight="bold"
+                      stroke='black'
+                      strokeWidth="0.5"
                     >
                       {route.label}
                     </text>

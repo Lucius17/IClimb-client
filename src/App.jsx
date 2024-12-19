@@ -12,7 +12,6 @@ import SuperAdminPanel from './components/SuperAdminPanel';
 import News from './components/News';
 import GymList from "./components/GymList.jsx";
 import ForgotPassword from './components/ForgotPassword.jsx';
-import GymOverview from "./components/GymOverview";
 import ClimbingWall from './components/ClimbingWall.jsx';
 import ClimbingWallEditor from './components/ClimbingWallEditor.jsx';
 import Sectors from './components/Sectors.jsx';

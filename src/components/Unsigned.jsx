@@ -17,7 +17,7 @@ function Unsigned() {
       <Link to="/signup" className="btn btn-secondary w-100">Sign Up</Link>
       <Link to="/superadmin" className="btn btn-secondary w-100">AdminPanel</Link>
       <Link to="/news" className="btn btn-secondary w-100">News</Link>
-      <Link to="/test" className="btn btn-secondary w-100">ścianka</Link>
+      <Link to="/wall/1" className="btn btn-secondary w-100">ścianka</Link>
       
 
       <Menu />

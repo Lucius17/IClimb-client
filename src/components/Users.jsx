@@ -1,40 +1,51 @@
-// Users.jsx
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import api from '/src/api.js'
+import api from '/src/api.js';
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const fetchUsers = async () => {
     try {
       const response = await api.get('/users/users');
       setUsers(response.data);
-    }catch(err) {
+    } catch (err) {
       console.error('Error fetching users:', err);
     }
-  }
+  };
 
   const handleEdit = (user) => {
     setCurrentUser(user);
     setShowEditModal(true);
   };
 
-  const handleDelete = async (userId) => {
+  const handleDeleteRequest = (user) => {
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
-      await api.delete(`/users/users/${userId}`);
-      setUsers(users.filter((user) => user._id !== userId));
+      if (userToDelete) {
+        await api.delete(`/users/users/${userToDelete._id}`);
+        setUsers(users.filter((user) => user._id !== userToDelete._id));
+        setUserToDelete(null);
+        setShowDeleteModal(false);
+      }
     } catch (error) {
       console.error('Error deleting user:', error);
     }
   };
+
   const handleSave = async () => {
     try {
       await api.put(`/users/users/${currentUser._id}`, currentUser);
-      setUsers(users.map(user => (user._id === currentUser._id ? currentUser : user)));
+      setUsers(users.map((user) => (user._id === currentUser._id ? currentUser : user)));
       setShowEditModal(false);
     } catch (error) {
       console.error('Error updating user:', error);
@@ -46,7 +57,7 @@ function Users() {
     setCurrentUser({ ...currentUser, [name]: value });
   };
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user) =>
     user.nickname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -68,34 +79,40 @@ function Users() {
       />
       <table className="table">
         <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nickname</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Gender</th>
-          <th>Belay</th>
-          <th>Actions</th>
-        </tr>
+          <tr>
+            <th>ID</th>
+            <th>Nickname</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Belay</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
           {filteredUsers.map((user) => (
-              <tr key={user._id}>
-                <td>{user._id.slice(-4)}</td>
-                <td>{user.nickname}</td>
-                <td>{user.name || '-'}</td>
-                <td>{user.email}</td>
-                <td>{user.gender || "-"}</td>
-                <td>{user.belay ? 'Yes' : 'No'}</td>
-                <td>
-                  <button className="btn btn-warning btn-sm me-2" onClick={() => handleEdit(user)}>
-                    Edit
-                  </button>
-                  <button className="btn btn-danger btn-sm" onClick={() => handleDelete(user._id)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
+            <tr key={user._id}>
+              <td>{user._id.slice(-4)}</td>
+              <td>{user.nickname}</td>
+              <td>{user.name || '-'}</td>
+              <td>{user.email}</td>
+              <td>{user.gender || '-'}</td>
+              <td>{user.belay ? 'Yes' : 'No'}</td>
+              <td>
+                <button
+                  className="btn btn-warning btn-sm me-2"
+                  onClick={() => handleEdit(user)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDeleteRequest(user)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>
@@ -145,21 +162,21 @@ function Users() {
               <div className="form-group mb-3">
                 <label>Belay</label>
                 <input
-                    className="form-control"
-                    name="belay"
-                    value={currentUser.belay}
-                    onChange={handleChange}
-                >
-                </input>
+                  type="text"
+                  className="form-control"
+                  name="belay"
+                  value={currentUser.belay}
+                  onChange={handleChange}
+                />
               </div>
               <div className="form-group mb-3">
                 <label>Nickname</label>
                 <input
-                    type="text"
-                    className="form-control"
-                    name="nickname"
-                    value={currentUser.nickname}
-                    onChange={handleChange}
+                  type="text"
+                  className="form-control"
+                  name="nickname"
+                  value={currentUser.nickname}
+                  onChange={handleChange}
                 />
               </div>
             </>
@@ -171,6 +188,25 @@ function Users() {
           </Button>
           <Button variant="primary" onClick={handleSave}>
             Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for Deleting User */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete the user{' '}
+          <strong>{userToDelete?.nickname}</strong>?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirm}>
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>
