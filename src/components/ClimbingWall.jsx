@@ -1,14 +1,11 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { Modal, Button, Offcanvas, Form } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import Rating from 'react-rating-stars-component';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import api from '/src/api.js'
 
-const routes = [
-  { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
-  { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
-  { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },
-];
 
 // Mapowanie etykiety na kategorię
 const getDifficultyCategory = (label) => {
@@ -23,6 +20,12 @@ const getDifficultyCategory = (label) => {
 const ClimbingWall = () => {
   const [show, setShow] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
+  const { gymId } = useParams();
+  const [routes, setRoutes] = useState([
+    { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
+    { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
+    { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },
+  ]);
   const [svgContent, setSvgContent] = useState('');
   const [filteredCategory, setFilteredCategory] = useState('');
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
@@ -31,6 +34,20 @@ const ClimbingWall = () => {
   const [newRating, setNewRating] = useState(0);
   const svgRef = useRef(null);
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    if (gymId) {
+      api.get(`/gyms/Gym/${gymId}`)
+          .then((response) => {
+            const { routes } = response.data;
+            setRoutes (routes || []);
+          })
+          .catch((error) => {
+            console.error('Error fetching gym routes:', error);
+          });
+    }
+  }, [gymId]);
+  // Załadowanie SVG
 
   useLayoutEffect(() => {
     fetch('/wall.svg')
@@ -61,16 +78,42 @@ const ClimbingWall = () => {
     setFilteredCategory(category);
   };
 
+  useEffect(() => {
+    api.get('/auth/me')
+        .then((response) => {
+          setNewNick(response.data.nickname); // Set the user's nickname for comments
+        })
+        .catch((error) => {
+          console.error('Error fetching current user:', error);
+        });
+  }, []);
+
+
   const handleAddComment = () => {
     if (newComment.trim() && newNick.trim() && selectedRoute) {
-      const newCommentObject = { text: newComment.trim(), nick: newNick.trim(), rating: newRating };
-      setSelectedRoute((prev) => ({
-        ...prev,
-        comments: [...prev.comments, newCommentObject],
-      }));
-      setNewComment('');
-      setNewNick('');
-      setNewRating(0);
+      const commentData = {
+        routeId: selectedRoute.id,
+        comment: {
+          text: newComment.trim(),
+          nickname: newNick.trim(),
+          rating: newRating,
+        },
+      };
+      console.log('Payload for add comment:', commentData);
+      api.put(`/gyms/Gym/${gymId}/comment`, commentData)
+          .then((response) => {
+            setSelectedRoute((prev) => ({
+              ...prev,
+              comments: response.data.route.comments,
+              rating: response.data.route.rating,
+            }));
+            setNewComment('');
+            setNewNick('');
+            setNewRating(0);
+          })
+          .catch((error) => {
+            console.error('Error adding comment:', error);
+          });
     }
   };
 
@@ -80,6 +123,7 @@ const ClimbingWall = () => {
 
   return (
     <>
+      {/* Boczne menu */}
       <Button
         variant="primary"
         onClick={() => setIsSidenavOpen(true)}
@@ -160,6 +204,7 @@ const ClimbingWall = () => {
         </TransformWrapper>
       </div>
 
+      {/* Modal */}
       {selectedRoute && (
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -171,7 +216,7 @@ const ClimbingWall = () => {
             <ul>
               {selectedRoute.comments.map((comment, index) => (
                 <li key={index}>
-                  <strong>{comment.nick}:</strong> {comment.text}
+                  <strong>{comment.nick}:</strong> {comment.text} 
                   <Rating value={comment.rating} count={5} size={16} activeColor="#ffd700" edit={false} />
                 </li>
               ))}

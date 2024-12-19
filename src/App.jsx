@@ -48,7 +48,9 @@ function App() {
               <Route path="/gym" element={<MapView/>}/>
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
-              <Route path="/wall/:id" element={<ClimbingWall/>}/>
+              <Route path="/test/:gymId" element={<ClimbingWall/>}/>
+              <Route path="/edytor" element={<ClimbingWallEditor/>}/>
+              <Route path="/wall/:gymId" element={<ClimbingWall/>}/>
               <Route path="/edytor/:gymId" element={<ClimbingWallEditor/>}/>
               <Route path="/admin/*" element={<AdminPanel/>}/>
               <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
