@@ -92,30 +92,47 @@ const ClimbingWall = () => {
   const handleAddComment = () => {
     if (newComment.trim() && newNick.trim() && selectedRoute) {
       const commentData = {
-        routeId: selectedRoute.id,
+        routeId: selectedRoute._id,
         comment: {
           text: newComment.trim(),
           nickname: newNick.trim(),
           rating: newRating,
         },
       };
+
       console.log('Payload for add comment:', commentData);
+
       api.put(`/gyms/Gym/${gymId}/comment`, commentData)
-          .then((response) => {
-            setSelectedRoute((prev) => ({
-              ...prev,
-              comments: response.data.route.comments,
-              rating: response.data.route.rating,
-            }));
-            setNewComment('');
-            setNewNick('');
-            setNewRating(0);
+          .then(() => {
+            // Fetch updated routes data immediately after adding a comment
+            api.get(`/gyms/Gym/${gymId}`)
+                .then((response) => {
+                  const updatedRoutes = response.data.routes;
+
+                  // Find and set the updated route
+                  const updatedRoute = updatedRoutes.find((r) => r._id === selectedRoute._id);
+
+                  if (updatedRoute) {
+                    setSelectedRoute(updatedRoute); // Update modal
+                    setRoutes(updatedRoutes); // Update the main routes list
+                  }
+
+                  // Clear input fields
+                  setNewComment('');
+                  setNewNick('');
+                  setNewRating(0);
+                })
+                .catch((error) => {
+                  console.error('Error refreshing routes after comment:', error);
+                });
           })
           .catch((error) => {
             console.error('Error adding comment:', error);
           });
     }
   };
+
+
 
   const filteredRoutes = filteredCategory
     ? routes.filter((route) => getDifficultyCategory(route.label) === filteredCategory)
@@ -216,7 +233,7 @@ const ClimbingWall = () => {
             <ul>
               {selectedRoute.comments.map((comment, index) => (
                 <li key={index}>
-                  <strong>{comment.nick}:</strong> {comment.text} 
+                  <strong>{comment.nickname}:</strong> {comment.text}
                   <Rating value={comment.rating} count={5} size={16} activeColor="#ffd700" edit={false} />
                 </li>
               ))}

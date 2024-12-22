@@ -106,20 +106,27 @@ const ClimbingWallEditor = () => {
 
   const handleDeleteComment = async (routeId, commentIndex) => {
     try {
+      // Create a new array of routes without mutating the original state
       const updatedRoutes = routes.map((route) => {
         if (route.id === routeId) {
+          // Clone the comments array and remove the specific comment
           const updatedComments = [...route.comments];
           updatedComments.splice(commentIndex, 1);
+
+          // Return the updated route
           return { ...route, comments: updatedComments };
         }
         return route;
       });
+
+      // Update state and database
       setRoutes(updatedRoutes);
       await api.put(`/gyms/Gym/${gymId}`, { routes: updatedRoutes });
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
   };
+
 
   const getClampedPosition = (coord, dimension) => {
     return Math.max(0, Math.min(coord, dimension));
@@ -228,7 +235,7 @@ const ClimbingWallEditor = () => {
                     variant="danger"
                     size="sm"
                     style={{ float: 'right' }}
-                    onClick={() => handleDeleteComment(index)}
+                    onClick={() => handleDeleteComment(selectedRoute.id ,index)}
                   >
                     Delete
                   </Button>
