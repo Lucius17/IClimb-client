@@ -165,7 +165,98 @@ function Users() {
           ))}
         </tbody>
       </table>
-      {/* Modals remain unchanged */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {currentUser && (
+            <>
+              <div className="form-group mb-3">
+                <label>ID</label>
+                <input type="text" className="form-control" value={currentUser._id} disabled />
+              </div>
+              <div className="form-group mb-3">
+                <label>Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="name"
+                  value={currentUser.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email"
+                  value={currentUser.email}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Gender</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="gender"
+                  value={currentUser.gender}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Belay</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="belay"
+                  value={currentUser.belay}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Nickname</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nickname"
+                  value={currentUser.nickname}
+                  onChange={handleChange}
+                />
+              </div>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSave}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for Deleting User */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete the user{' '}
+          <strong>{userToDelete?.nickname}</strong>?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirm}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
