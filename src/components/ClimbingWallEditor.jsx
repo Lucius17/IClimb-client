@@ -36,13 +36,6 @@ const ClimbingWallEditor = () => {
   }, [gymId]);
 
   useLayoutEffect(() => {
-    fetch('/wall.svg')
-      .then((response) => response.text())
-      .then((data) => setSvgContent(data))
-      .catch((error) => console.error('Error loading SVG:', error));
-  }, []);
-
-  useEffect(() => {
     const svg = svgRef.current;
     if (svg) {
       setSvgDimensions({ width: svg.viewBox.baseVal.width, height: svg.viewBox.baseVal.height });

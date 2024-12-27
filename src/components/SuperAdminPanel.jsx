@@ -36,7 +36,7 @@ function Gyms() {
     }
 
     try {
-      await api.post(`/gyms/${selectedCenterId}/add-admin`, newAdmin);
+      await api.post(`/gyms/Gym/${selectedCenterId}/add-admin`, newAdmin);
       setSuccess('Admin added successfully.');
       setShowAddModal(false);
       setNewAdmin({ email: '', password: '' });

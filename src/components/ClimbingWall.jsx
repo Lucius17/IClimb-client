@@ -39,7 +39,8 @@ const ClimbingWall = () => {
     if (gymId) {
       api.get(`/gyms/Gym/${gymId}`)
           .then((response) => {
-            const { routes } = response.data;
+            const { svg, routes } = response.data;
+            setSvgContent(svg);
             setRoutes (routes || []);
           })
           .catch((error) => {
@@ -49,19 +50,12 @@ const ClimbingWall = () => {
   }, [gymId]);
   // Załadowanie SVG
 
-  useLayoutEffect(() => {
-    fetch('/wall.svg')
-      .then((response) => response.text())
-      .then((data) => setSvgContent(data))
-      .catch((error) => console.error('Error loading SVG:', error));
-  }, []);
-
-  useEffect(() => {
-    const svg = svgRef.current;
-    if (svg) {
-      setSvgDimensions({ width: svg.viewBox.baseVal.width, height: svg.viewBox.baseVal.height });
-    }
-  }, [svgContent]);
+    useLayoutEffect(() => {
+        const svg = svgRef.current;
+        if (svg) {
+            setSvgDimensions({ width: svg.viewBox.baseVal.width, height: svg.viewBox.baseVal.height });
+        }
+    }, [svgContent]);
 
   const handleMarkerClick = (route) => {
     setSelectedRoute(route);
