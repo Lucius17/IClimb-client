@@ -36,10 +36,11 @@ function Gyms() {
     }
 
     try {
-      await api.post(`/gyms/Gym/${selectedCenterId}/add-admin`, newAdmin);
+      await api.post(`/gyms/gym/${selectedCenterId}/add-admin`, newAdmin);
       setSuccess('Admin added successfully.');
       setShowAddModal(false);
       setNewAdmin({ email: '', password: '' });
+      fetchGyms();
     } catch (err) {
       console.error('Error adding admin:', err);
       setError('Failed to add admin.');
@@ -100,10 +101,16 @@ function Gyms() {
       <ul className="list-group mb-4">
         {sportsCenters.map(center => (
           <li key={center._id} className="list-group-item d-flex justify-content-between align-items-center">
-            <span>{center.name}</span>
+            <span>
+              {center.name} - Admin: {center.adminId ? `ID: ${center.adminId}` : 'None'}
+            </span>
             <div>
               <Link to={`/admin/${center._id}/dashboard`} className="btn btn-primary mr-2">Manage</Link>
-              <button className="btn btn-secondary mr-2" onClick={() => openAddAdminModal(center._id)}>Add Admin</button>
+              {center.adminId ? (
+                <button className="btn btn-warning mr-2" onClick={() => confirmDeleteCenter(center._id)}>Remove Admin</button>
+              ) : (
+                <button className="btn btn-secondary mr-2" onClick={() => openAddAdminModal(center._id)}>Add Admin</button>
+              )}
               <button className="btn btn-danger" onClick={() => confirmDeleteCenter(center._id)}>Delete</button>
             </div>
           </li>
