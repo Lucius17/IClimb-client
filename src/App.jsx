@@ -16,6 +16,7 @@ import ClimbingWall from './components/ClimbingWall.jsx';
 import ClimbingWallEditor from './components/ClimbingWallEditor.jsx';
 import Sectors from './components/Sectors.jsx';
 import VerifyEmail from './components/VerifyEmail.jsx';
+import ModPanel from './components/Moderator.jsx';
 
 
 function App() {
@@ -52,9 +53,10 @@ function App() {
               <Route path="/edytor" element={<ClimbingWallEditor/>}/>
               <Route path="/wall/:gymId" element={<ClimbingWall/>}/>
               <Route path="/edytor/:gymId" element={<ClimbingWallEditor/>}/>
-              <Route path="/admin/*" element={<AdminPanel/>}/>
+              <Route path="/admin/*" element={<AdminPanel/>}/>"
               <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
+              <Route path="/moderator/:centerId/*" element={<ModPanel/>}/>
               <Route path="/forgot-password" element={<ForgotPassword/>}/>
               <Route path="/sectors/:gymId" element={<Sectors/>} />
               <Route path="/verify/:token" element={<VerifyEmail/>}/>
