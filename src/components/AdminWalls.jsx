@@ -14,7 +14,7 @@ function Walls() {
   
 	return (
 	  <div>
-		<h2>Walls</h2>
+		<h2>Sectors</h2>
 		<table className="table">
 		  <thead>
 			<tr>

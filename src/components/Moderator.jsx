@@ -65,7 +65,7 @@ function ModPanel() {
             <Link className="nav-link text-white" to={`/moderator/${centerId}/users`}>Users</Link>
           </li> */}
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to={`/moderator/${centerId}/walls`}>Walls</Link>
+            <Link className="nav-link text-white" to={`/moderator/${centerId}/walls`}>Sectors</Link>
           </li>
           <li className="nav-item mb-2">
             <Link className="nav-link text-white" to={`/moderator/${centerId}/news`}>News</Link>
