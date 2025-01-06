@@ -106,7 +106,7 @@ function Gyms() {
     }
   };
 
-  const handleUploadSVG = () => {
+  const handleUploadSVG = (sector) => {
     alert('Upload SVG functionality to be implemented.');
   };
 
@@ -222,7 +222,7 @@ function Gyms() {
                 {sector}
                 <div>
                   <button className="btn btn-danger btn-sm mr-2" onClick={() => handleDeleteSector(sector)}>Delete</button>
-                  <button className="btn btn-info btn-sm" onClick={handleUploadSVG}>Upload SVG</button>
+                  <button className="btn btn-info btn-sm" onClick={handleUploadSVG(sector)}>Upload SVG</button>
                 </div>
               </li>
             ))}
