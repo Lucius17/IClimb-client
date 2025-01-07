@@ -20,8 +20,7 @@ function Walls() {
 			<tr>
 			  <th>ID</th>
 			  <th>Name</th>
-			  <th>Height</th>
-			  <th>Actions</th>
+			  <th>Edit</th>
 			</tr>
 		  </thead>
 		  <tbody>
@@ -29,13 +28,9 @@ function Walls() {
 			  <tr key={wall.id}>
 				<td>{wall.id}</td>
 				<td>{wall.name}</td>
-				<td>{wall.height}</td>
 				<td>
 				  <button className="btn btn-warning mr-2" onClick={() => handleEdit(wall.id)}>
 					Edit
-				  </button>
-				  <button className="btn btn-danger" onClick={() => handleDelete(wall.id)}>
-					Delete
 				  </button>
 				</td>
 			  </tr>
