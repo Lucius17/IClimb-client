@@ -102,7 +102,7 @@ function Gyms() {
         {sportsCenters.map(center => (
           <li key={center._id} className="list-group-item d-flex justify-content-between align-items-center">
             <span>
-              {center.name} - Admin: {center.adminId ? `ID: ${center.adminId}` : 'None'}
+              {center.name} - Admin: {center.admin?.email ? `${center.admin.email}` : 'none'}
             </span>
             <div>
               <Link to={`/admin/${center._id}/dashboard`} className="btn btn-primary mr-2">Manage</Link>

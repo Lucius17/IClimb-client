@@ -98,20 +98,18 @@ const ClimbingWall = () => {
 
       api.put(`/gyms/Gym/${gymId}/comment`, commentData)
           .then(() => {
-            // Fetch updated routes data immediately after adding a comment
+
             api.get(`/gyms/Gym/${gymId}`)
                 .then((response) => {
                   const updatedRoutes = response.data.routes;
 
-                  // Find and set the updated route
                   const updatedRoute = updatedRoutes.find((r) => r._id === selectedRoute._id);
 
                   if (updatedRoute) {
-                    setSelectedRoute(updatedRoute); // Update modal
-                    setRoutes(updatedRoutes); // Update the main routes list
+                    setSelectedRoute(updatedRoute);
+                    setRoutes(updatedRoutes);
                   }
 
-                  // Clear input fields
                   setNewComment('');
                   setNewNick('');
                   setNewRating(0);

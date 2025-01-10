@@ -12,9 +12,8 @@ const Sectors = () => {
 	useEffect(() => {
 		const fetchSectors = async () => {
 			try {
-				const response = await api.get(`/gyms/Gym/${gymId}`);
-				const gymData = response.data;
-				setSectors(gymData.sectors || []);
+				const response = await api.get(`/gyms/Gym/${gymId}/sectors`);
+				setSectors(response.data.sectors || []);
 				setError(null);
 			} catch (err) {
 				console.error('Error fetching sectors:', err);
@@ -40,11 +39,12 @@ const Sectors = () => {
 					<p className="text-danger">{error}</p>
 				) : sectors.length > 0 ? (
 					<div className="row">
-						{sectors.map((sector, index) => (
-							<div className="col-md-4" key={index}>
+						{sectors.map((sector) => (
+							<div className="col-md-4" key={sector._id}>
 								<div className="card">
 									<div className="card-body">
-										<h5 className="card-title">{sector}</h5>
+										<h5 className="card-title">{sector.name}</h5>
+										<p className="card-text">Routes: {sector.routes.length}</p>
 									</div>
 								</div>
 							</div>
