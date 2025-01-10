@@ -65,7 +65,7 @@ function AdminPanel() {
             <Link className="nav-link text-white" to={`/admin/${centerId}/users`}>Users</Link>
           </li> */}
           <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to={`/admin/${centerId}/walls`}>Walls</Link>
+            <Link className="nav-link text-white" to={`/admin/${centerId}/walls`}>Sectors</Link>
           </li>
           <li className="nav-item mb-2">
             <Link className="nav-link text-white" to={`/admin/${centerId}/news`}>News</Link>

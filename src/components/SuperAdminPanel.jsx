@@ -13,6 +13,9 @@ function Gyms() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newAdmin, setNewAdmin] = useState({ email: '', password: '' });
   const [selectedCenterId, setSelectedCenterId] = useState(null);
+  const [showSectorsModal, setShowSectorsModal] = useState(false);
+  const [sectors, setSectors] = useState([]);
+  const [newSector, setNewSector] = useState('');
 
   const fetchGyms = async () => {
     try {
@@ -91,6 +94,22 @@ function Gyms() {
     setShowAddModal(true);
   };
 
+  const handleAddSector = () => {
+    if (newSector.trim() === '') return;
+    setSectors([...sectors, newSector]);
+    setNewSector('');
+  };
+
+  const handleDeleteSector = (sector) => {
+    if (window.confirm(`Are you sure you want to delete the sector: ${sector}?`)) {
+      setSectors(sectors.filter(s => s !== sector));
+    }
+  };
+
+  const handleUploadSVG = (sector) => {
+    alert('Upload SVG functionality to be implemented.');
+  };
+
   return (
     <div>
       <h2>Sports Center Management</h2>
@@ -111,6 +130,7 @@ function Gyms() {
               ) : (
                 <button className="btn btn-secondary mr-2" onClick={() => openAddAdminModal(center._id)}>Add Admin</button>
               )}
+              <button className="btn btn-info mr-2" onClick={() => setShowSectorsModal(true)}>Sectors</button>
               <button className="btn btn-danger" onClick={() => confirmDeleteCenter(center._id)}>Delete</button>
             </div>
           </li>
@@ -177,6 +197,40 @@ function Gyms() {
           </Button>
           <Button variant="danger" onClick={handleDeleteCenter}>
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showSectorsModal} onHide={() => setShowSectorsModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Manage Sectors</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="form-group">
+            <label>New Sector</label>
+            <input
+              type="text"
+              className="form-control"
+              value={newSector}
+              onChange={(e) => setNewSector(e.target.value)}
+            />
+            <button className="btn btn-success mt-2" onClick={handleAddSector}>Add Sector</button>
+          </div>
+          <ul className="list-group mt-3">
+            {sectors.map(sector => (
+              <li key={sector} className="list-group-item d-flex justify-content-between align-items-center">
+                {sector}
+                <div>
+                  <button className="btn btn-danger btn-sm mr-2" onClick={() => handleDeleteSector(sector)}>Delete</button>
+                  <button className="btn btn-info btn-sm" onClick={handleUploadSVG(sector)}>Upload SVG</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSectorsModal(false)}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
