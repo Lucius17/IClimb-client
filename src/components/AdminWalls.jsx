@@ -66,7 +66,7 @@ const Walls = () => {
 
 	return (
 		<div>
-			<h2>Walls</h2>
+			<h2>Sectors</h2>
 			{loading ? (
 				<p>Loading walls...</p>
 			) : error ? (
