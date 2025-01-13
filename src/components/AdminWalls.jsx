@@ -9,7 +9,9 @@ const Walls = () => {
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [showAddForm, setShowAddForm] = useState(false);
+	const [showEditForm, setShowEditForm] = useState(false);
 	const [newSector, setNewSector] = useState({ name: "", svg: null });
+	const [currentEditSector, setCurrentEditSector] = useState(null);
 
 	useEffect(() => {
 		const fetchSectors = async () => {
@@ -27,8 +29,9 @@ const Walls = () => {
 		fetchSectors();
 	}, [centerId]);
 
-	const handleEdit = (id) => {
-		alert(`Edit wall/sector with id ${id}`);
+	const handleEdit = (sector) => {
+		setCurrentEditSector(sector);
+		setShowEditForm(true);
 	};
 
 	const handleDelete = async (id) => {
@@ -64,6 +67,34 @@ const Walls = () => {
 		}
 	};
 
+	const handleUpdateSector = async (e) => {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append("name", currentEditSector.name);
+		if (currentEditSector.svg) {
+			formData.append("svg", currentEditSector.svg);
+		}
+
+		try {
+			const response = await api.put(
+				`/gyms/Gym/${centerId}/sectors/${currentEditSector._id}`,
+				formData,
+				{ headers: { "Content-Type": "multipart/form-data" } }
+			);
+			setSectors((prevSectors) =>
+				prevSectors.map((sector) =>
+					sector._id === currentEditSector._id ? response.data : sector
+				)
+			);
+			alert("Sector updated successfully.");
+			setShowEditForm(false);
+			setCurrentEditSector(null);
+		} catch (err) {
+			console.error("Error updating sector:", err);
+			alert("Failed to update sector.");
+		}
+	};
+
 	return (
 		<div>
 			<h2>Sectors</h2>
@@ -87,10 +118,16 @@ const Walls = () => {
 								<td>{sector._id}</td>
 								<td>{sector.name}</td>
 								<td>
-									<button className="btn btn-warning mr-2" onClick={() => handleEdit(sector._id)}>
+									<button
+										className="btn btn-warning mr-2"
+										onClick={() => handleEdit(sector)}
+									>
 										Edit
 									</button>
-									<button className="btn btn-danger" onClick={() => handleDelete(sector._id)}>
+									<button
+										className="btn btn-danger"
+										onClick={() => handleDelete(sector._id)}
+									>
 										Delete
 									</button>
 								</td>
@@ -98,7 +135,10 @@ const Walls = () => {
 						))}
 						</tbody>
 					</table>
-					<button className="btn btn-primary mt-3" onClick={() => setShowAddForm(!showAddForm)}>
+					<button
+						className="btn btn-primary mt-3"
+						onClick={() => setShowAddForm(!showAddForm)}
+					>
 						{showAddForm ? "Cancel" : "Add Sector"}
 					</button>
 					{showAddForm && (
@@ -109,7 +149,9 @@ const Walls = () => {
 									type="text"
 									className="form-control"
 									value={newSector.name}
-									onChange={(e) => setNewSector({ ...newSector, name: e.target.value })}
+									onChange={(e) =>
+										setNewSector({ ...newSector, name: e.target.value })
+									}
 									required
 								/>
 							</div>
@@ -119,12 +161,60 @@ const Walls = () => {
 									type="file"
 									accept=".svg"
 									className="form-control"
-									onChange={(e) => setNewSector({ ...newSector, svg: e.target.files[0] })}
+									onChange={(e) =>
+										setNewSector({ ...newSector, svg: e.target.files[0] })
+									}
 									required
 								/>
 							</div>
 							<button type="submit" className="btn btn-success">
 								Add Sector
+							</button>
+						</form>
+					)}
+					{showEditForm && (
+						<form onSubmit={handleUpdateSector} className="mt-3">
+							<div className="mb-3">
+								<label className="form-label">Edit Sector Name</label>
+								<input
+									type="text"
+									className="form-control"
+									value={currentEditSector.name}
+									onChange={(e) =>
+										setCurrentEditSector({
+											...currentEditSector,
+											name: e.target.value,
+										})
+									}
+									required
+								/>
+							</div>
+							<div className="mb-3">
+								<label className="form-label">SVG File (Optional)</label>
+								<input
+									type="file"
+									accept=".svg"
+									className="form-control"
+									onChange={(e) =>
+										setCurrentEditSector({
+											...currentEditSector,
+											svg: e.target.files[0],
+										})
+									}
+								/>
+							</div>
+							<button type="submit" className="btn btn-success">
+								Update Sector
+							</button>
+							<button
+								type="button"
+								className="btn btn-secondary ml-2"
+								onClick={() => {
+									setShowEditForm(false);
+									setCurrentEditSector(null);
+								}}
+							>
+								Cancel
 							</button>
 						</form>
 					)}

@@ -56,7 +56,7 @@ function AdminPanel() {
   return (
     <div className="d-flex" style={{ height: '100vh' }}>
       <div className="bg-dark text-white p-3" style={{ width: '250px' }}>
-        <h2 className="text-center mb-4">Climb Center: {centerId}</h2>
+        <h2 className="text-center mb-4">Climb Center: <font size ="4">{centerId}</font></h2>
         <ul className="nav flex-column">
           <li className="nav-item mb-2">
             <Link className="nav-link text-white" to={`/admin/${centerId}/dashboard`}>Dashboard</Link>
