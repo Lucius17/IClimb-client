@@ -20,7 +20,7 @@ const getDifficultyCategory = (label) => {
 const ClimbingWall = () => {
   const [show, setShow] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
-  const { gymId } = useParams();
+  const { gymId,sectorId } = useParams();
   const [routes, setRoutes] = useState([
     { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
     { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
@@ -37,7 +37,7 @@ const ClimbingWall = () => {
 
   useEffect(() => {
     if (gymId) {
-      api.get(`/gyms/Gym/${gymId}`)
+      api.get(`/gyms/Gym/${gymId}/sectors/${sectorId}`)
           .then((response) => {
             const { svg, routes } = response.data;
             setSvgContent(svg);
@@ -99,7 +99,7 @@ const ClimbingWall = () => {
       api.put(`/gyms/Gym/${gymId}/comment`, commentData)
           .then(() => {
 
-            api.get(`/gyms/Gym/${gymId}`)
+            api.get(`/gyms/Gym/${gymId}/sectors/${sectorId}`)
                 .then((response) => {
                   const updatedRoutes = response.data.routes;
 

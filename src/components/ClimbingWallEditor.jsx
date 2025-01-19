@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "/src/api.js"
 
 const ClimbingWallEditor = () => {
-  const { gymId } = useParams();
+  const { gymId, sectorId } = useParams();
   
   // console.log('gymId:', gymId);
   const [routes, setRoutes] = useState([
@@ -23,7 +23,7 @@ const ClimbingWallEditor = () => {
   useEffect(() => {
     const fetchGymData = async () => {
       try {
-        const response = await api.get(`/gyms/Gym/${gymId}`);
+        const response = await api.get(`/gyms/Gym/${gymId}/sectors/${sectorId}`);
         const { svg, routes } = response.data;
         setSvgContent(svg);
         setRoutes(routes || []);
@@ -33,7 +33,7 @@ const ClimbingWallEditor = () => {
     };
 
     fetchGymData();
-  }, [gymId]);
+  }, [gymId, sectorId]);
 
   useLayoutEffect(() => {
     const svg = svgRef.current;
@@ -52,15 +52,14 @@ const ClimbingWallEditor = () => {
       x: (event.clientX - rect.left) / rect.width,
       y: (event.clientY - rect.top) / rect.height,
       description: '',
-      comments: [],
+      comments: [{ text: '', nickname: ''}],
       rating: 0,
     };
 
     try {
       const updatedRoutes = [...routes, newRoute];
       setRoutes(updatedRoutes);
-
-      await api.put(`/gyms/Gym/${gymId}`, { routes: updatedRoutes });
+      await api.put(`/gyms/Gym/${gymId}/sectors/${sectorId}`, { routes: updatedRoutes });
     } catch (error) {
       console.error('Error adding new route:', error);
     }
@@ -78,7 +77,7 @@ const ClimbingWallEditor = () => {
       );
       setRoutes(updatedRoutes);
 
-      await api.put(`/gyms/Gym/${gymId}`, { routes: updatedRoutes });
+      await api.put(`/gyms/Gym/${gymId}/sectors/${sectorId}`, { routes: updatedRoutes });
     } catch (error) {
       console.error('Error saving route:', error);
     } finally {
@@ -91,7 +90,7 @@ const ClimbingWallEditor = () => {
       const updatedRoutes = routes.filter((route) => route.id !== id);
       setRoutes(updatedRoutes); // Optimistic UI update
 
-      await api.put(`/gyms/Gym/${gymId}`, { routes: updatedRoutes });
+      await api.put(`/gyms/Gym/${gymId}/sectors/${sectorId}`, { routes: updatedRoutes });
     } catch (error) {
       console.error('Error deleting route:', error);
     }
@@ -114,7 +113,7 @@ const ClimbingWallEditor = () => {
 
       // Update state and database
       setRoutes(updatedRoutes);
-      await api.put(`/gyms/Gym/${gymId}`, { routes: updatedRoutes });
+      await api.put(`/gyms/Gym/${gymId}/sectors/${sectorId}`, { routes: updatedRoutes });
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
