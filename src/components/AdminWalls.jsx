@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom"; // Added Link for navigation
 import api from "/src/api.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -125,11 +125,17 @@ const Walls = () => {
 										Edit
 									</button>
 									<button
-										className="btn btn-danger"
+										className="btn btn-danger mr-2"
 										onClick={() => handleDelete(sector._id)}
 									>
 										Delete
 									</button>
+									<Link
+										to={`/edytor/${centerId}/sectors/${sector._id}`}
+										className="btn btn-primary"
+									>
+										Add Routes
+									</Link>
 								</td>
 							</tr>
 						))}

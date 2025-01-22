@@ -52,7 +52,7 @@ const ClimbingWallEditor = () => {
       x: (event.clientX - rect.left) / rect.width,
       y: (event.clientY - rect.top) / rect.height,
       description: '',
-      comments: [{ text: '', nickname: ''}],
+      comments: [{ text: 'kasz', nickname: 'masz', rating: 1 }],
       rating: 0,
     };
 
