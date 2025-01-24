@@ -17,6 +17,7 @@ import ClimbingWallEditor from './components/ClimbingWallEditor.jsx';
 import Sectors from './components/Sectors.jsx';
 import VerifyEmail from './components/VerifyEmail.jsx';
 import ModPanel from './components/Moderator.jsx';
+import Gym from './components/Gym.jsx';
 
 
 function App() {
@@ -46,7 +47,7 @@ function App() {
               <Route path="/signup" element={isAuthenticated ? <Navigate to="/"/> : <SignUp/>}/>
               <Route path="/map" element={<MapView/>}/>
               <Route path="/gymlist" element={<GymList/>}/>
-              <Route path="/gym" element={<MapView/>}/>
+              <Route path="/gym" element={<Gym/>}/>
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/test/:gymId" element={<ClimbingWall/>}/>

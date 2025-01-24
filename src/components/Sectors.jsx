@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '/src/api.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Menu from './Menu';
 
 const Sectors = () => {
 	const { gymId } = useParams();
@@ -54,6 +55,7 @@ const Sectors = () => {
 					<p>No sectors available for this gym.</p>
 				)}
 			</div>
+			<Menu />
 		</>
 	);
 };
