@@ -52,8 +52,8 @@ const ClimbingWallEditor = () => {
       x: (event.clientX - rect.left) / rect.width,
       y: (event.clientY - rect.top) / rect.height,
       description: '',
-      comments: [{ text: 'kasz', nickname: 'masz', rating: 1 }],
-      rating: 0,
+      comments: [],
+      //rating: 1,
     };
 
     try {
@@ -85,14 +85,14 @@ const ClimbingWallEditor = () => {
     }
   };
 
-  const handleDeleteRoute = async (id) => {
+  const handleDeleteRoute = async (routeId) => {
     try {
-      const updatedRoutes = routes.filter((route) => route.id !== id);
-      setRoutes(updatedRoutes); // Optimistic UI update
-
-      await api.put(`/gyms/Gym/${gymId}/sectors/${sectorId}`, { routes: updatedRoutes });
+      await api.delete(`/gyms/Gym/${gymId}/sectors/${sectorId}/routes/${routeId}`);
+      const updatedRoutes = routes.filter(route => route.id !== routeId);
+      setRoutes(updatedRoutes);
+      setShowModal(false); // Close the modal after deletion
     } catch (error) {
-      console.error('Error deleting route:', error);
+      console.error("Error deleting route:", error);
     }
   };
 
