@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import ReactQuill from 'react-quill'; // Użyj ReactQuill zamiast Quill
 import 'react-quill/dist/quill.snow.css'; // Import CSS Quill
 import Menu from './Menu.jsx';
+import BackButton from './BackButton.jsx';
 
 function News() {
   const [showModal, setShowModal] = useState(false);
@@ -40,6 +41,7 @@ function News() {
   };
 
   return (
+    
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
         {newsItems.map((news, index) => (
@@ -65,6 +67,7 @@ function News() {
 
       {/* Menu component at the bottom */}
       <Menu />
+      <BackButton />
 
       {/* Modal to show full news */}
       {selectedNews && (

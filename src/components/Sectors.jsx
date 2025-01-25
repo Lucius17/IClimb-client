@@ -56,6 +56,7 @@ const Sectors = () => {
 				)}
 			</div>
 			<Menu />
+			
 		</>
 	);
 };
