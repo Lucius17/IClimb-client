@@ -90,7 +90,7 @@ const ClimbingWallEditor = () => {
       await api.delete(`/gyms/Gym/${gymId}/sectors/${sectorId}/routes/${routeId}`);
       const updatedRoutes = routes.filter(route => route.id !== routeId);
       setRoutes(updatedRoutes);
-      setShowModal(false); // Close the modal after deletion
+      setShowModal(false);
     } catch (error) {
       console.error("Error deleting route:", error);
     }
@@ -236,7 +236,7 @@ const ClimbingWallEditor = () => {
             </ListGroup>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={() => handleDeleteRoute(selectedRoute.id)}>
+            <Button variant="danger" onClick={() => handleDeleteRoute(selectedRoute._id)}>
               Delete
             </Button>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
