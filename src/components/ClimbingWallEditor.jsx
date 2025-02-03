@@ -4,6 +4,7 @@ import { Modal, Button, Form, ListGroup } from 'react-bootstrap';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from "/src/api.js"
+import { v4 as uuidv4 } from 'uuid';
 
 const ClimbingWallEditor = () => {
   const { gymId, sectorId } = useParams();
@@ -45,7 +46,7 @@ const ClimbingWallEditor = () => {
   const handleAddRoute = async (event) => {
     const rect = svgRef.current.getBoundingClientRect();
     const newRoute = {
-      id: Date.now(),
+      id: uuidv4(),
       date: Date.now(),
       label: 'New',
       color: 'gray',
@@ -236,7 +237,7 @@ const ClimbingWallEditor = () => {
             </ListGroup>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger" onClick={() => handleDeleteRoute(selectedRoute._id)}>
+            <Button variant="danger" onClick={() => handleDeleteRoute(selectedRoute.id)}>
               Delete
             </Button>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
