@@ -51,12 +51,12 @@ function News() {
             style={{ alignItems: 'center', cursor: 'pointer' }}
             onClick={() => handleNewsClick(news)}
           >
-            <img
+            {/* <img
               src={news.imageUrl}
               alt={news.title}
               className="news-image me-3"
               style={{ width: '100px', height: '100px' }}
-            />
+            /> */}
             <div>
               <h5>{news.title}</h5>
               <p>{news.description}</p>

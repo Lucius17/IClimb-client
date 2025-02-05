@@ -176,7 +176,7 @@ function Profile() {
               <p>Nickname: {formData.nickname}</p>
               <button
                 className="btn btn-primary mb-3 me-2"
-                onClick={() => navigate('/gym')}
+                onClick={() => navigate('/editgym')}
               >
                 Zmień siłownię
               </button>

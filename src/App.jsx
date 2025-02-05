@@ -48,6 +48,7 @@ function App() {
               <Route path="/map" element={<MapView/>}/>
               <Route path="/gymlist" element={<GymList/>}/>
               <Route path="/gym" element={<Gym/>}/>
+              <Route path="/editgym" element={<MapView/>}/>
               <Route path="/news" element={<News/>}/>
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/test/:gymId" element={<ClimbingWall/>}/>
