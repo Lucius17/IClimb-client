@@ -96,7 +96,7 @@ const ClimbingWall = () => {
 
       console.log('Payload for add comment:', commentData);
 
-      api.put(`/gyms/Gym/${gymId}/comment`, commentData)
+      api.put(`/gyms/Gym/${gymId}/sectors/${sectorId}/routes/${selectedRoute.id}/comment`, commentData)
           .then(() => {
 
             api.get(`/gyms/Gym/${gymId}/sectors/${sectorId}`)

@@ -18,6 +18,7 @@ import Sectors from './components/Sectors.jsx';
 import VerifyEmail from './components/VerifyEmail.jsx';
 import ModPanel from './components/Moderator.jsx';
 import Gym from './components/Gym.jsx';
+import AdminNews from "./components/AdminNews.jsx";
 
 
 function App() {
@@ -55,7 +56,7 @@ function App() {
               <Route path="/edytor" element={<ClimbingWallEditor/>}/>
               <Route path="/wall/:gymId/sectors/:sectorId" element={<ClimbingWall/>}/>
               <Route path="/edytor/:gymId/sectors/:sectorId" element={<ClimbingWallEditor/>}/>
-              <Route path="/admin/*" element={<AdminPanel/>}/>"
+              <Route path="/admin/*" element={<AdminPanel/>}/>
               <Route path="/superadmin/*" element={<SuperAdminPanel/>}/>
               <Route path="/admin/:centerId/*" element={<AdminPanel/>}/>
               <Route path="/moderator/:centerId/*" element={<ModPanel/>}/>
