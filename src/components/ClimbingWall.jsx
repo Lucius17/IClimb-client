@@ -4,10 +4,9 @@ import { useParams } from 'react-router-dom';
 import Rating from 'react-rating-stars-component';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import api from '/src/api.js'
+import api from '/src/api.js';
 
-
-// Mapowanie etykiety na kategorię
+// Mapping label to category
 const getDifficultyCategory = (label) => {
   const labelValue = label.toUpperCase();
   if (['1', '2', '3', '4', '5A', '5B', '5C', '6A'].includes(labelValue)) return 'Beginner';
@@ -20,11 +19,11 @@ const getDifficultyCategory = (label) => {
 const ClimbingWall = () => {
   const [show, setShow] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
-  const { gymId,sectorId } = useParams();
+  const { gymId, sectorId } = useParams();
   const [routes, setRoutes] = useState([
-    { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Trudna trasa dla zaawansowanych.', comments: [{ text: 'Wymaga sporej siły', nick: 'User1', rating: 4 }], rating: 4 },
-    { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Średnio zaawansowana trasa.', comments: [{ text: 'Fajna na rozgrzewkę', nick: 'User2', rating: 3 }], rating: 3 },
-    { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Ekstremalnie trudna, dla profesjonalistów.', comments: [{ text: 'Prawdziwe wyzwanie!', nick: 'User3', rating: 5 }], rating: 5 },
+    { id: 1, label: '5A', color: 'red', x: 0.2, y: 0.3, difficulty: 'easy', description: 'Difficult route for advanced climbers.', comments: [{ text: 'Requires a lot of strength', nick: 'User1', rating: 4 }], rating: 4 },
+    { id: 2, label: '6B', color: 'blue', x: 0.5, y: 0.6, difficulty: 'medium', description: 'Moderately advanced route.', comments: [{ text: 'Great for warm-up', nick: 'User2', rating: 3 }], rating: 3 },
+    { id: 3, label: '7C', color: 'green', x: 0.8, y: 0.4, difficulty: 'hard', description: 'Extremely difficult, for professionals.', comments: [{ text: 'A real challenge!', nick: 'User3', rating: 5 }], rating: 5 },
   ]);
   const [svgContent, setSvgContent] = useState('');
   const [filteredCategory, setFilteredCategory] = useState('');
@@ -38,24 +37,23 @@ const ClimbingWall = () => {
   useEffect(() => {
     if (gymId) {
       api.get(`/gyms/Gym/${gymId}/sectors/${sectorId}`)
-          .then((response) => {
-            const { svg, routes } = response.data;
-            setSvgContent(svg);
-            setRoutes (routes || []);
-          })
-          .catch((error) => {
-            console.error('Error fetching gym routes:', error);
-          });
+        .then((response) => {
+          const { svg, routes } = response.data;
+          setSvgContent(svg);
+          setRoutes(routes || []);
+        })
+        .catch((error) => {
+          console.error('Error fetching gym routes:', error);
+        });
     }
   }, [gymId]);
-  // Załadowanie SVG
 
-    useLayoutEffect(() => {
-        const svg = svgRef.current;
-        if (svg) {
-            setSvgDimensions({ width: svg.viewBox.baseVal.width, height: svg.viewBox.baseVal.height });
-        }
-    }, [svgContent]);
+  useLayoutEffect(() => {
+    const svg = svgRef.current;
+    if (svg) {
+      setSvgDimensions({ width: svg.viewBox.baseVal.width, height: svg.viewBox.baseVal.height });
+    }
+  }, [svgContent]);
 
   const handleMarkerClick = (route) => {
     setSelectedRoute(route);
@@ -74,14 +72,13 @@ const ClimbingWall = () => {
 
   useEffect(() => {
     api.get('/auth/me')
-        .then((response) => {
-          setNewNick(response.data.nickname); // Set the user's nickname for comments
-        })
-        .catch((error) => {
-          console.error('Error fetching current user:', error);
-        });
+      .then((response) => {
+        setNewNick(response.data.nickname); // Set the user's nickname for comments
+      })
+      .catch((error) => {
+        console.error('Error fetching current user:', error);
+      });
   }, []);
-
 
   const handleAddComment = () => {
     if (newComment.trim() && newNick.trim() && selectedRoute) {
@@ -97,34 +94,30 @@ const ClimbingWall = () => {
       console.log('Payload for add comment:', commentData);
 
       api.put(`/gyms/Gym/${gymId}/sectors/${sectorId}/routes/${selectedRoute.id}/comment`, commentData)
-          .then(() => {
+        .then(() => {
+          api.get(`/gyms/Gym/${gymId}/sectors/${sectorId}`)
+            .then((response) => {
+              const updatedRoutes = response.data.routes;
+              const updatedRoute = updatedRoutes.find((r) => r._id === selectedRoute._id);
 
-            api.get(`/gyms/Gym/${gymId}/sectors/${sectorId}`)
-                .then((response) => {
-                  const updatedRoutes = response.data.routes;
+              if (updatedRoute) {
+                setSelectedRoute(updatedRoute);
+                setRoutes(updatedRoutes);
+              }
 
-                  const updatedRoute = updatedRoutes.find((r) => r._id === selectedRoute._id);
-
-                  if (updatedRoute) {
-                    setSelectedRoute(updatedRoute);
-                    setRoutes(updatedRoutes);
-                  }
-
-                  setNewComment('');
-                  setNewNick('');
-                  setNewRating(0);
-                })
-                .catch((error) => {
-                  console.error('Error refreshing routes after comment:', error);
-                });
-          })
-          .catch((error) => {
-            console.error('Error adding comment:', error);
-          });
+              setNewComment('');
+              setNewNick('');
+              setNewRating(0);
+            })
+            .catch((error) => {
+              console.error('Error refreshing routes after comment:', error);
+            });
+        })
+        .catch((error) => {
+          console.error('Error adding comment:', error);
+        });
     }
   };
-
-
 
   const filteredRoutes = filteredCategory
     ? routes.filter((route) => getDifficultyCategory(route.label) === filteredCategory)
@@ -132,18 +125,18 @@ const ClimbingWall = () => {
 
   return (
     <>
-      {/* Boczne menu */}
+      {/* Side menu */}
       <Button
         variant="primary"
         onClick={() => setIsSidenavOpen(true)}
         style={{ position: 'fixed', top: 10, left: 10, zIndex: 1000 }}
       >
-        ☰ Filtry
+        ☰ Filters
       </Button>
 
       <Offcanvas show={isSidenavOpen} onHide={() => setIsSidenavOpen(false)} placement="start">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Filtry</Offcanvas.Title>
+          <Offcanvas.Title>Filters</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Form>
@@ -217,11 +210,11 @@ const ClimbingWall = () => {
       {selectedRoute && (
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Trasa: {selectedRoute.label}</Modal.Title>
+            <Modal.Title>Route: {selectedRoute.label}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p><strong>Opis:</strong> {selectedRoute.description}</p>
-            <p><strong>Komentarze:</strong></p>
+            <p><strong>Description:</strong> {selectedRoute.description}</p>
+            <p><strong>Comments:</strong></p>
             <ul>
               {selectedRoute.comments.map((comment, index) => (
                 <li key={index}>
@@ -232,16 +225,16 @@ const ClimbingWall = () => {
             </ul>
             <Form>
               <Form.Group className="mt-3">
-                <Form.Label>Komentarz</Form.Label>
+                <Form.Label>Comment</Form.Label>
                 <Form.Control
                   type="text"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Wpisz swój komentarz"
+                  placeholder="Enter your comment"
                 />
               </Form.Group>
               <Form.Group className="mt-3">
-                <Form.Label>Ocena</Form.Label>
+                <Form.Label>Rating</Form.Label>
                 <Rating
                   value={newRating}
                   count={5}
@@ -251,17 +244,17 @@ const ClimbingWall = () => {
                 />
               </Form.Group>
               <Button className="mt-2" variant="primary" onClick={handleAddComment}>
-                Dodaj komentarz
+                Add Comment
               </Button>
             </Form>
             <div className="mt-3">
-              <strong>Średnia ocena:</strong>
+              <strong>Average Rating:</strong>
               <Rating value={selectedRoute.rating} count={5} size={24} activeColor="#ffd700" edit={false} />
             </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-              Zamknij
+              Close
             </Button>
           </Modal.Footer>
         </Modal>

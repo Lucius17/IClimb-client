@@ -5,32 +5,31 @@ function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');  // Pole Imię
-  const [nickname, setNickname] = useState('');  // Opcjonalny nick
-  const [gender, setGender] = useState('');  // Płeć
-  const [canBelay, setCanBelay] = useState('');  // Asekuracja
-  const [errors, setErrors] = useState({}); // Stan na błędy walidacji
+  const [name, setName] = useState('');  // Name field
+  const [nickname, setNickname] = useState('');  // Optional nickname
+  const [gender, setGender] = useState('');  // Gender
+  const [canBelay, setCanBelay] = useState('');  // Belaying ability
+  const [errors, setErrors] = useState({}); // State for validation errors
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const validationErrors = {};
 
-    // Sprawdzenie, czy pola są poprawnie wypełnione
-    if (!email) validationErrors.email = 'Email jest wymagany';
-    if (!name) validationErrors.name = 'Imię jest wymagane';
-    if (!gender) validationErrors.gender = 'Wybór płci jest wymagany';
-    if (!canBelay) validationErrors.canBelay = 'Wybór asekuracji jest wymagany';
-    if (password !== confirmPassword) validationErrors.password = 'Hasła muszą być takie same';
+    // Check if fields are correctly filled
+    if (!email) validationErrors.email = 'Email is required';
+    if (!name) validationErrors.name = 'Name is required';
+    if (!gender) validationErrors.gender = 'Gender selection is required';
+    if (!canBelay) validationErrors.canBelay = 'Belaying ability selection is required';
+    if (password !== confirmPassword) validationErrors.password = 'Passwords must match';
 
     setErrors(validationErrors);
 
-    // Jeżeli są błędy walidacji, nie wysyłamy formularza
+    // If there are validation errors, do not submit the form
     if (Object.keys(validationErrors).length > 0) return;
 
-    // Logika rejestracji
-    //console.log('Rejestracja:', { email, password, name, nickname, gender, canBelay });
+    // Registration logic
+    //console.log('Registration:', { email, password, name, nickname, gender, canBelay });
     try {
-
       const response = await api.post('/auth/signup', {
         email,
         password,
@@ -64,7 +63,7 @@ function SignUp() {
         </div>
 
         <div className="form-group mt-3">
-          <label htmlFor="name">Imię i Nazwisko (opcjonalne)</label>
+          <label htmlFor="name">Full Name (optional)</label>
           <input 
             type="text" 
             className="form-control" 
@@ -76,7 +75,7 @@ function SignUp() {
         </div>
 
         <div className="form-group mt-3">
-          <label htmlFor="nickname">Nick</label>
+          <label htmlFor="nickname">Nickname</label>
           <input 
             type="text" 
             className="form-control" 
@@ -87,32 +86,32 @@ function SignUp() {
         </div>
 
         <div className="form-group mt-3">
-          <label>Płeć</label>
+          <label>Gender</label>
           <select 
             className="form-control" 
             value={gender} 
             onChange={(e) => setGender(e.target.value)} 
             required
           >
-            <option value="">Wybierz płeć</option>
-            <option value="male">Mężczyzna</option>
-            <option value="female">Kobieta</option>
-            <option value="other">Inne</option>
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
           </select>
           {errors.gender && <div className="text-danger">{errors.gender}</div>}
         </div>
 
         <div className="form-group mt-3">
-          <label>Czy umiesz asekurować?</label>
+          <label>Can you belay?</label>
           <select 
             className="form-control" 
             value={canBelay} 
             onChange={(e) => setCanBelay(e.target.value)} 
             required
           >
-            <option value="">Wybierz</option>
-            <option value="yes">Tak</option>
-            <option value="no">Nie</option>
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
           </select>
           {errors.canBelay && <div className="text-danger">{errors.canBelay}</div>}
         </div>
