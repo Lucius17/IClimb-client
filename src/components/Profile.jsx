@@ -77,10 +77,10 @@ function Profile() {
     }
   };
   const activityData = {
-    labels: ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek'],
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     datasets: [
       {
-        label: 'Aktywność (godziny)',
+        label: 'Activity (Hours)',
         data: [2, 1.5, 3, 2.5, 4],
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -169,26 +169,26 @@ function Profile() {
               />
             </div>
             <div className="col-md-8">
-              <h2>Twój Profil</h2>
-              <p>Imię: {formData.name}</p>
+              <h2>Your profile</h2>
+              <p>Name: {formData.name}</p>
               <p>Email: {formData.email}</p>
-              <p>Siłownia: {gymName}</p>
+              <p>Gym: {gymName}</p>
               <p>Nickname: {formData.nickname}</p>
               <button
                 className="btn btn-primary mb-3 me-2"
                 onClick={() => navigate('/editgym')}
               >
-                Zmień siłownię
+                Change gym
               </button>
               <button className="btn btn-secondary mb-3" onClick={() => setIsEditing(true)}>
-                Edytuj profil
+                Edit profile
               </button>
             </div>
           </div>
         )}
 
         <div className="row mt-5">
-          <h3>Twoja aktywność</h3>
+          <h3>Your activity</h3>
           <Line data={activityData} />
         </div>
 

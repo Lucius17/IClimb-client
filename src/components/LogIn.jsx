@@ -53,7 +53,7 @@ function LogIn({ onSignIn }) {
         <button type="submit" className="btn btn-primary mt-3 w-100">Log In</button>
       </form>
       <div className="mt-3">
-        <Link to="/forgot-password">Zapomniałem hasła</Link>
+        <Link to="/forgot-password">Forgot Password</Link>
       </div>
     </div>
   );
