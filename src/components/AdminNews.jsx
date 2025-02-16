@@ -37,7 +37,7 @@ function News() {
 			.catch(error => console.error('Error fetching news:', error));
 	}, [centerId]);
 
-    const [newNews, setNewNews] = useState({_id: '', title: '', description: '', imageUrl: '', fullContent: ''});
+    const [newNews, setNewNews] = useState({_id: '', title: '', description: '', FormData: '', fullContent: ''});
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -51,7 +51,7 @@ function News() {
 	const handleDelete = async (id) => {
 		try {
 			await api.delete(`/gyms/news/${id}`);
-			setNewsItems(newsItems.filter(news => news.id !== id));
+			setNewsItems(newsItems.filter(news => news._id !== id));
 		} catch (error) {
 			console.error('Error deleting news:', error);
 		}
@@ -60,7 +60,7 @@ function News() {
 	const handleAddOrUpdateNews = async () => {
 		try {
 			if (isEditing) {
-				await api.put(`/news/${newNews._id}`, newNews);
+				await api.put(`/gyms/news/${newNews._id}`, newNews);
 				setNewsItems(newsItems.map(news => (news._id === newNews._id ? newNews : news)));
 			} else {
 				const response = await api.post(`/gyms/${centerId}/news`, newNews);
@@ -73,7 +73,7 @@ function News() {
 	};
 
     const resetForm = () => {
-        setNewNews({id: '', title: '', description: '', imageUrl: '', fullContent: ''});
+        setNewNews({_id: '', title: '', description: '', FormData: '', fullContent: ''});
         setShowModal(false);
         setIsEditing(false);
     };
@@ -83,7 +83,7 @@ function News() {
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            setNewNews({...newNews, imageUrl: reader.result});
+            setNewNews({...newNews, FormData: reader.result});
         };
 
         if (file) {
@@ -108,13 +108,13 @@ function News() {
                 {newsItems.map((news) => (
                     <tr key={news._id}>
                         <td>{news._id}</td>
-                        <td><img src={news.imageUrl} alt={news.title} style={{width: '50px'}}/></td>
+                        <td><img src={news.FormData} alt={news.title} style={{width: '50px'}}/></td>
                         <td>{news.title}</td>
                         <td>
-                            <button className="btn btn-warning mr-2" onClick={() => handleEdit(news.id)}>
+                            <button className="btn btn-warning mr-2" onClick={() => handleEdit(news._id)}>
                                 Edit
                             </button>
-                            <button className="btn btn-danger" onClick={() => handleDelete(news.id)}>
+                            <button className="btn btn-danger" onClick={() => handleDelete(news._id)}>
                                 Delete
                             </button>
                         </td>
