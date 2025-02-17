@@ -83,7 +83,7 @@ const ClimbingWall = () => {
   const handleAddComment = () => {
     if (newComment.trim() && newNick.trim() && selectedRoute) {
       const commentData = {
-        routeId: selectedRoute._id,
+        routeId: selectedRoute.id,
         comment: {
           text: newComment.trim(),
           nickname: newNick.trim(),

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import api from '/src/api.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from './Menu';
@@ -42,12 +42,14 @@ const Sectors = () => {
 					<div className="row">
 						{sectors.map((sector) => (
 							<div className="col-md-4" key={sector._id}>
-								<div className="card">
-									<div className="card-body">
-										<h5 className="card-title">{sector.name}</h5>
-										<p className="card-text">Routes: {sector.routes.length}</p>
+								<Link to={`/wall/${gymId}/sectors/${sector._id}`} className="text-decoration-none">
+									<div className="card">
+										<div className="card-body">
+											<h5 className="card-title">{sector.name}</h5>
+											<p className="card-text">Routes: {Array.isArray(sector.routes) ? sector.routes.length : 0}</p>
+										</div>
 									</div>
-								</div>
+								</Link>
 							</div>
 						))}
 					</div>
@@ -56,7 +58,6 @@ const Sectors = () => {
 				)}
 			</div>
 			<Menu />
-			
 		</>
 	);
 };
