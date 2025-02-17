@@ -5,8 +5,9 @@ import { faHouse,faDumbbell,faUser } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function Menu() {
+
   return (
-    
+
     <div className="fixed-bottom">
     
       <div className="d-flex justify-content-around">
