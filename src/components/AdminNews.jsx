@@ -64,12 +64,14 @@ function News() {
 				setNewsItems(newsItems.map(news => (news._id === newNews._id ? newNews : news)));
 			} else {
 				const response = await api.post(`/gyms/${centerId}/news`, newNews);
-				setNewsItems([...newsItems, response.data]);
+                setNewsItems(prevNewsItems => [...prevNewsItems, response.data]);
 			}
 			resetForm();
 		} catch (error) {
 			console.error('Error saving news:', error);
-		}
+		} finally {
+            resetForm()
+        }
 	};
 
     const resetForm = () => {
