@@ -53,8 +53,8 @@ function News() {
               newsItems.map((news, index) => (
                   <div
                       key={index}
-                      className="news-item d-flex mb-3"
-                      style={{ alignItems: 'center', cursor: 'pointer' }}
+                      className="border rounded text-center conainer my-4"
+                      style={{ alignItems: 'center', cursor: 'pointer', textAlign: 'center' }}
                       onClick={() => handleNewsClick(news)}
                   >
                     {/* <img
@@ -63,7 +63,7 @@ function News() {
               className="news-image me-3"
               style={{ width: '100px', height: '100px' }}
             /> */}
-                    <div>
+                    <div className='conainer'>
                       <h5>{news.title}</h5>
                       <p>{news.description}</p>
                     </div>

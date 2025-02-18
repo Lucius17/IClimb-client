@@ -15,9 +15,21 @@ function LogIn({ onSignIn }) {
         password,
       });
 
-      console.log(response.data.message);
+      console.log(response.data);
       onSignIn();
-      window.location.href = '/gym';
+      // window.location.href = '/gym';
+
+      const authResponse = await api.get('/auth/me');
+
+      console.log(authResponse.data);
+      if (authResponse.data.role === 'superadmin') {
+        window.location.href = '/superadmin/gyms';
+      }
+      if (authResponse.data.role === 'user') {
+       window.location.href = '/gym';
+      }
+      
+
     } catch (err) {
       console.error('Login error:', err);
       setError('An error occurred during login');
