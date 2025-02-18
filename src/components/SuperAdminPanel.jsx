@@ -245,10 +245,21 @@ function SuperAdminPanel() {
 
   return (
     <div className="container">
+      <button
+                  className="btn btn-danger position-absolute top-0 end-0"
+                  onClick={() => {
+                    api.post('/auth/logout');
+                    navigate('/login');
+                  }}
+                >
+                  Log out
+                </button>
       <h1 className="my-4">Super Admin Panel</h1>
       <nav>
         <Link to="/superadmin/gyms" className={`btn ${isGymsActive ? 'btn-primary' : 'btn-secondary'} m-2`}>Gyms</Link>
         <Link to="/superadmin/users" className={`btn ${isUsersActive ? 'btn-primary' : 'btn-secondary'} m-2`}>Users</Link>
+       
+        
       </nav>
 
       <Routes>

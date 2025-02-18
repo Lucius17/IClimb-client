@@ -11,9 +11,11 @@ import Walls from './AdminWalls';
 import News from './AdminNews';
 import Moderators from './AdminMods';
 import 'leaflet/dist/leaflet.css';
+import api from '/src/api.js'
 
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
 
 // Przykładowe dane dla wykresu w Dashboard
 function Dashboard() {
@@ -46,15 +48,35 @@ function Dashboard() {
 }
 
 
-
+const authResponse = await api.get('/auth/me');
 
 
 // AdminPanel z zagnieżdżonymi trasami
 function AdminPanel() {
   const { centerId } = useParams();
+  
+
+  
 
   return (
     <div className="d-flex" style={{ height: '100vh' }}>
+    <button
+                      className="btn btn-danger position-absolute top-0 end-0"
+                      onClick={() => {
+                        api.post('/auth/logout');
+                        navigate('/login');
+                      }}
+                    >
+                      Log out
+                    </button>
+                      {
+                        authResponse.data.role === 'superadmin' && (
+                          <Link to="/superadmin/gyms" className="btn btn-primary position-absolute top-0 start-0 m-2">
+                            Super Admin Panel
+                          </Link>
+                        )
+                      }
+              
       <div className="bg-dark text-white p-3" style={{ width: '250px' }}>
         <h2 className="text-center mb-4">Climb Center: <font size ="4">{centerId}</font></h2>
         <ul className="nav flex-column">
