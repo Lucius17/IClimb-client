@@ -23,7 +23,7 @@ function Unsigned() {
   
   return (
     <div className="container text-center">
-      <h1>IClimb</h1>
+      <h1>Slab</h1>
       <br />
       <br />
       <br />

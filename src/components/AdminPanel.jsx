@@ -48,8 +48,6 @@ function Dashboard() {
 }
 
 
-const authResponse = await api.get('/auth/me');
-
 
 // AdminPanel z zagnieżdżonymi trasami
 function AdminPanel() {
