@@ -130,7 +130,7 @@ function Gyms() {
               ) : (
                 <button className="btn btn-secondary mr-2" onClick={() => openAddAdminModal(center._id)}>Add Admin</button>
               )}
-              <button className="btn btn-info mr-2" onClick={() => setShowSectorsModal(true)}>Sectors</button>
+              {/* <button className="btn btn-info mr-2" onClick={() => setShowSectorsModal(true)}>Sectors</button> */}
               <button className="btn btn-danger" onClick={() => confirmDeleteCenter(center._id)}>Delete</button>
             </div>
           </li>
