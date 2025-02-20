@@ -65,6 +65,12 @@ const ClimbingWallEditor = () => {
       console.error('Error adding new route:', error);
     }
   };
+  const difficultyLevels = [
+    "1", "2", "3", "4", "5A", "5B", "5C", "6A",      // Beginner
+    "6A+", "6B", "6B+", "6C", "6C+", "7A", "7A+",    // Intermediate
+    "7B", "7B+", "7C", "7C+", "8A", "8A+",          // Advanced
+    "8B", "8B+", "8C", "8C+", "9A", "9A+", "9B", "9B+", "9C", "9C+" // Pro
+  ];
 
   const handleMarkerClick = (route) => {
     setSelectedRoute(route);
@@ -190,14 +196,18 @@ const ClimbingWallEditor = () => {
           </Modal.Header>
           <Modal.Body>
             <Form>
-              <Form.Group>
-                <Form.Label>Label</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={selectedRoute.label}
-                  onChange={(e) => setSelectedRoute({ ...selectedRoute, label: e.target.value })}
-                />
-              </Form.Group>
+            <Form.Group>
+  <Form.Label>Difficulty</Form.Label>
+  <Form.Select
+    value={selectedRoute.difficulty}
+    onChange={(e) => setSelectedRoute({ ...selectedRoute, difficulty: e.target.value })}
+  >
+    <option value="">1</option>
+    {difficultyLevels.map((level) => (
+      <option key={level} value={level}>{level}</option>
+    ))}
+  </Form.Select>
+</Form.Group>
               <Form.Group>
                 <Form.Label>Color</Form.Label>
                 <Form.Control
