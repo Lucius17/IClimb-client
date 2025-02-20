@@ -132,24 +132,26 @@ const Walls = () => {
 								<td>{sector._id}</td>
 								<td>{sector.name}</td>
 								<td>
-								 {authResponse.role === 'superadmin' && (
-									<>
-
-									<button
-										className="btn btn-warning mr-2"
-										onClick={() => handleEdit(sector)}
-									>
-										Edit
-									</button>
-									<button
-										className="btn btn-danger mr-2"
-										onClick={() => handleDelete(sector._id)}
-									>
-										Delete
-									</button>
-									</>
-									
-									  )}
+								{
+  authResponse === null ? (
+    <p>Loading...</p>
+  ) : authResponse.role === 'superadmin' ? (
+    <>
+      <button
+        className="btn btn-warning mr-2"
+        onClick={() => handleEdit(sector)}
+      >
+        Edit
+      </button>
+      <button
+        className="btn btn-danger mr-2"
+        onClick={() => handleDelete(sector._id)}
+      >
+        Delete
+      </button>
+    </>
+  ) : null
+}
 									
 									
 									<Link
@@ -163,12 +165,21 @@ const Walls = () => {
 						))}
 						</tbody>
 					</table>
-					<button
+					{
+  authResponse === null ? (
+    <p>Loading...</p>
+  ) : authResponse.role === 'superadmin' ? (
+    <>
+	<button
 						className="btn btn-primary mt-3"
 						onClick={() => setShowAddForm(!showAddForm)}
 					>
 						{showAddForm ? "Cancel" : "Add Sector"}
 					</button>
+    </>
+  ) : null
+}
+					
 					{showAddForm && (
 						<form onSubmit={handleAddSector} className="mt-3">
 							<div className="mb-3">

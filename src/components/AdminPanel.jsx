@@ -86,6 +86,8 @@ function AdminPanel() {
       >
         Log out
       </button>
+
+      
       {authResponse.role === 'superadmin' && (
         <Link to="/superadmin/gyms" className="btn btn-primary position-absolute top-0 start-0 m-2">
           Super Admin Panel
