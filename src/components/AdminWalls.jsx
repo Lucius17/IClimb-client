@@ -12,6 +12,7 @@ const Walls = () => {
 	const [showEditForm, setShowEditForm] = useState(false);
 	const [newSector, setNewSector] = useState({ name: "", svg: null });
 	const [currentEditSector, setCurrentEditSector] = useState(null);
+	const [authResponse, setAuthResponse] = useState(null);
 
 	useEffect(() => {
 		const fetchSectors = async () => {
@@ -27,7 +28,20 @@ const Walls = () => {
 			}
 		};
 		fetchSectors();
+
+		const fetchAuth = async () => {
+			  try {
+				const response = await api.get('/auth/me');
+				setAuthResponse(response.data);
+			  } catch (error) {
+				console.error('Error fetching auth data', error);
+				navigate('/login'); // Przekierowanie na stronę logowania w razie błędu
+			  }
+			};
+		
+			fetchAuth();
 	}, [centerId]);
+
 
 	const handleEdit = (sector) => {
 		setCurrentEditSector(sector);
@@ -118,6 +132,9 @@ const Walls = () => {
 								<td>{sector._id}</td>
 								<td>{sector.name}</td>
 								<td>
+								 {authResponse.role === 'superadmin' && (
+									<>
+
 									<button
 										className="btn btn-warning mr-2"
 										onClick={() => handleEdit(sector)}
@@ -130,11 +147,16 @@ const Walls = () => {
 									>
 										Delete
 									</button>
+									</>
+									
+									  )}
+									
+									
 									<Link
 										to={`/edytor/${centerId}/sectors/${sector._id}`}
 										className="btn btn-primary"
 									>
-										Add Routes
+										Edit Routes
 									</Link>
 								</td>
 							</tr>
