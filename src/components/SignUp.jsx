@@ -17,7 +17,7 @@ function SignUp() {
 
     // Check if fields are correctly filled
     if (!email) validationErrors.email = 'Email is required';
-    if (!name) validationErrors.name = 'Name is required';
+    // if (!name) validationErrors.name = 'Name is required';
     if (!gender) validationErrors.gender = 'Gender selection is required';
     if (!canBelay) validationErrors.canBelay = 'Belaying ability selection is required';
     if (password !== confirmPassword) validationErrors.password = 'Passwords must match';
