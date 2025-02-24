@@ -143,7 +143,7 @@ const filteredMarkers = searchQuery
                           className="btn btn-primary"
                           onClick={() => handleSelectGym(marker.id)}
                       >
-                          Wybierz
+                          Select
                       </button>
                   </div>
               </Popup>
