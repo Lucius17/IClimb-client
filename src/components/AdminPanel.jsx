@@ -122,7 +122,7 @@ function AdminPanel() {
           <Route path="walls" element={<Walls />} />
           <Route path="news" element={<News />} />
           <Route path="info" element={<Info centerId={centerId} />} />
-          <Route path="moderators" element={<Moderators />} />
+          <Route path="moderators" element={<Moderators gymId={centerId} />} />
         </Routes>
       </div>
     </div>
