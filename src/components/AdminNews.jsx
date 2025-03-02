@@ -7,29 +7,8 @@ import api from "/src/api.js"
 function News() {
 	const { centerId} = useParams();
 	console.log("Extracted gymId:", centerId);
-    const [newsItems, setNewsItems] = useState([
-        {
-            id: 1,
-            title: 'New Gym Opening in Warsaw!',
-            description: 'A brand new gym has opened in Warsaw with state-of-the-art equipment.',
-            imageUrl: 'https://via.placeholder.com/100',
-            fullContent: 'Full details about the new gym opening in Warsaw...',
-        },
-        {
-            id: 2,
-            title: 'Climbing Event This Weekend',
-            description: 'Join us for a fun climbing event happening this weekend!',
-            imageUrl: 'https://via.placeholder.com/100',
-            fullContent: 'Full details about the climbing event happening this weekend...',
-        },
-        {
-            id: 3,
-            title: 'Fitness Classes Starting Soon',
-            description: 'Our new fitness classes are starting next week. Sign up today!',
-            imageUrl: 'https://via.placeholder.com/100',
-            fullContent: 'Full details about the upcoming fitness classes...',
-        },
-    ]);
+
+    const [newsItems, setNewsItems] = useState([]);
 
 	useEffect(() => {
 		api.get(`/gyms/${centerId}/news`)

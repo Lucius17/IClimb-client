@@ -29,7 +29,7 @@ function ForgotPassword() {
         <button type="submit" className="btn btn-primary mt-3 w-100">Reset Password</button>
       </form>
       <div className="mt-3">
-        <Link to="/login">Powrót do logowania</Link>
+        <Link to="/login">Back to Login</Link>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '/src/api.js';
+import BackButton from './BackButton';
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -143,6 +144,7 @@ function SignUp() {
 
         <button type="submit" className="btn btn-primary mt-3 w-100">Sign Up</button>
       </form>
+      <BackButton />
     </div>
   );
 }

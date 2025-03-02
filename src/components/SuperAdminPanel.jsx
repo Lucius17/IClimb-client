@@ -249,7 +249,7 @@ function SuperAdminPanel() {
                   className="btn btn-danger position-absolute top-0 end-0"
                   onClick={() => {
                     api.post('/auth/logout');
-                    navigate('/login');
+                    window.location.href = '/';
                   }}
                 >
                   Log out

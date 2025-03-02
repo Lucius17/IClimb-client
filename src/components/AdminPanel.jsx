@@ -78,14 +78,14 @@ function AdminPanel() {
   return (
     <div className="d-flex" style={{ height: '100vh' }}>
       <button
-        className="btn btn-danger position-absolute top-0 end-0"
-        onClick={() => {
-          api.post('/auth/logout');
-          navigate('/login');
-        }}
-      >
-        Log out
-      </button>
+                        className="btn btn-danger position-absolute top-0 end-0"
+                        onClick={() => {
+                          api.post('/auth/logout');
+                          window.location.href = '/';
+                        }}
+                      >
+                        Log out
+                      </button>
 
       
       {authResponse.role === 'superadmin' && (

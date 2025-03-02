@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '/src/api.js'
+import BackButton from './BackButton';
 
 function LogIn({ onSignIn }) {
   const [email, setEmail] = useState('');
@@ -21,12 +22,20 @@ function LogIn({ onSignIn }) {
 
       const authResponse = await api.get('/auth/me');
 
-      console.log(authResponse.data);
+      // console.log(authResponse.data);
       if (authResponse.data.role === 'superadmin') {
         window.location.href = '/superadmin/gyms';
       }
       if (authResponse.data.role === 'user') {
        window.location.href = '/gym';
+      }
+      if (authResponse.data.role === 'mod') {
+        const centerId = authResponse.data.gym._id;
+        window.location.href = `/moderator/${centerId}/dashboard`;
+      }
+      if (authResponse.data.role === 'admin') {
+        const centerId = authResponse.data.gym._id;
+        window.location.href = `/admin/${centerId}/dashboard`;
       }
       
 
@@ -67,6 +76,7 @@ function LogIn({ onSignIn }) {
       <div className="mt-3">
         <Link to="/forgot-password">Forgot Password</Link>
       </div>
+      <BackButton />
     </div>
   );
 }

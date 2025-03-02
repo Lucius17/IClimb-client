@@ -13,6 +13,22 @@ function Unsigned() {
                 if (response.data?.gym?._id) {
                     setGymId(response.data.gym._id);
                 }
+                console.log(response.data);
+                if (response.data.role === 'superadmin') {
+                window.location.href = '/superadmin/gyms';
+                }
+                if (response.data.role === 'user') {
+                window.location.href = '/news';
+                }
+                if (response.data.role === 'mod') {
+                  const centerId = response.data.gym._id;
+                  window.location.href = `/moderator/${centerId}/dashboard`;
+                }
+                if (response.data.role === 'admin') {
+                  const centerId = response.data.gym._id;
+                  window.location.href = `/admin/${centerId}/dashboard`;
+                }
+                
             } catch (error) {
                 console.error('Failed to fetch gym ID:', error);
             }
@@ -31,16 +47,16 @@ function Unsigned() {
       <br />
       <Link to="/login" className="btn btn-primary mb-3 w-100">Sign In</Link>
       <Link to="/signup" className="btn btn-secondary w-100">Sign Up</Link>
-      <Link to="/superadmin" className="btn btn-secondary w-100">AdminPanel</Link>
+      {/* <Link to="/superadmin" className="btn btn-secondary w-100">AdminPanel</Link>
         {gymId ? (
             <Link to={`/news/${gymId}`} className="btn btn-secondary w-100">News</Link>
         ) : (
             <button className="btn btn-secondary w-100" disabled>No Gym Selected</button>
-        )}
-      <Link to="/wall/1" className="btn btn-secondary w-100">ścianka</Link>
+        )} */}
+      {/* <Link to="/wall/1" className="btn btn-secondary w-100">ścianka</Link> */}
       
 
-      <Menu />
+      {/* <Menu /> */}
     </div>
   );
 }
