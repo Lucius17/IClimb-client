@@ -7,7 +7,7 @@ const BackButton = () => {
   const navigate = useNavigate(); // Użyj useNavigate zamiast useHistory
 
   const handleBack = () => {
-    navigate(-1); // Przejdź do poprzedniej strony
+    window.location.href = '/'; // Przejdź do poprzedniej strony
   };
 
   return (
