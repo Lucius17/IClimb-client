@@ -18,7 +18,7 @@ function Unsigned() {
                 window.location.href = '/superadmin/gyms';
                 }
                 if (response.data.role === 'user') {
-                window.location.href = '/news';
+                window.location.href = '/gym';
                 }
                 if (response.data.role === 'mod') {
                   const centerId = response.data.gym._id;
